@@ -30,5 +30,6 @@
         "path": "./syntaxes/samt.tmLanguage.json"
       }
     ]
-  }
+  },
+  "license": "MIT"
 }

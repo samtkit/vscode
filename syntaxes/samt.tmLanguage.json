@@ -1,0 +1,82 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "SAMT",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#lineComments"
+		},
+		{
+			"include": "#blockComments"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [
+				{
+					"name": "keyword.import.samt",
+					"match": "\\b(import|as)\\b"
+				},
+				{
+					"name": "keyword.package.samt",
+					"match": "\\b(package)\\b"
+				},
+				{
+					"name": "keyword.record.samt",
+					"match": "\\b(record|extends)\\b"
+				},
+				{
+					"name": "keyword.enum.samt",
+					"match": "\\b(enum)\\b"
+				},
+				{
+					"name": "keyword.alias.samt",
+					"match": "\\b(alias)\\b"
+				},
+				{
+					"name": "keyword.service.samt",
+					"match": "\\b(service|async|oneway|raises)\\b"
+				},
+				{
+					"name": "keyword.provider.samt",
+					"match": "\\b(provide|implements|transport)\\b"
+				},
+				{
+					"name": "keyword.consumer.samt",
+					"match": "\\b(consume|uses)\\b"
+				},
+				{
+					"name": "keyword.boolean.samt",
+					"match": "\\b(true|false)\\b"
+				}
+			]
+		},
+		"strings": {
+			"name": "string.quoted.double.samt",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.samt",
+					"match": "\\\\."
+				}
+			]
+		},
+		"lineComments": {
+			"name": "comment.line.double-dash",
+			"begin": "//",
+			"end": "\n"
+		},
+		"blockComments": {
+			"name": "comment.block",
+			"begin": "/\\*",
+			"end": "\\*/"
+		}
+	},
+	"scopeName": "source.samt"
+}

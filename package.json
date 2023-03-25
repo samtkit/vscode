@@ -1,0 +1,34 @@
+{
+  "name": "samt",
+  "displayName": "SAMT",
+  "description": "VS Code support for the Simple API modeling toolkit",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.76.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "samt",
+        "aliases": [
+          "SAMT",
+          "samt"
+        ],
+        "extensions": [
+          "samt"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "samt",
+        "scopeName": "source.samt",
+        "path": "./syntaxes/samt.tmLanguage.json"
+      }
+    ]
+  }
+}

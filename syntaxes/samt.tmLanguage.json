@@ -1,64 +1,536 @@
 {
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "SAMT",
-	"foldingStartMarker": "{\\s*$",
-	"foldingStopMarker": "^\\s*}",
+	"foldingStartMarker": "[{\\[]\\s*$",
+	"foldingStopMarker": "^\\s*[}\\]]",
 	"patterns": [
 		{
-			"include": "#keywords"
-		},
-		{
-			"include": "#strings"
-		},
-		{
-			"include": "#lineComments"
-		},
-		{
-			"include": "#blockComments"
+			"include": "#code"
 		}
 	],
 	"repository": {
-		"keywords": {
+		"code": {
 			"patterns": [
 				{
-					"name": "keyword.import.samt",
-					"match": "\\b(import|as)\\b"
+					"include": "#comments"
 				},
 				{
-					"name": "keyword.package.samt",
-					"match": "\\b(package)\\b"
+					"include": "#invalid-identifier"
 				},
 				{
-					"name": "keyword.record.samt",
-					"match": "\\b(record|extends)\\b"
+					"include": "#inner-keywords"
 				},
 				{
-					"name": "keyword.enum.samt",
-					"match": "\\b(enum)\\b"
+					"include": "#import"
 				},
 				{
-					"name": "keyword.alias.samt",
-					"match": "\\b(alias)\\b"
+					"include": "#package"
 				},
 				{
-					"name": "keyword.service.samt",
-					"match": "\\b(service|async|oneway|raises)\\b"
+					"include": "#type-alias"
 				},
 				{
-					"name": "keyword.provider.samt",
-					"match": "\\b(provide|implements|transport)\\b"
+					"include": "#record-declaration"
 				},
 				{
-					"name": "keyword.consumer.samt",
-					"match": "\\b(consume|uses)\\b"
+					"include": "#enum-declaration"
 				},
 				{
-					"name": "keyword.boolean.samt",
-					"match": "\\b(true|false)\\b"
+					"include": "#service-declaration"
+				},
+				{
+					"include": "#provider-declaration"
+				},
+				{
+					"include": "#consumer-declaration"
+				},
+				{
+					"include": "#annotation"
+				},
+				{
+					"include": "#delimiter"
+				},
+				{
+					"include": "#expressions"
 				}
 			]
 		},
-		"strings": {
+		"import": {
+			"name": "meta.import.samt",
+			"begin": "(?<!\\^)\\b(import)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.other.import.samt"
+				}
+			},
+			"end": "(?!\\^)(?=\\b(import|package|alias|record|service|provide|consume)\\b)",
+			"patterns": [
+				{
+					"begin": "(?<!\\^)(?<=\\b(as)\\b)",
+					"end": "(?!\\^)(?=\\b(import|package|alias|record|service|provide|consume)\\b)",
+					"patterns": [
+						{
+							"include": "#code"
+						},
+						{
+							"name": "entity.name.type.samt",
+							"match": "\\b(\\w+)\\b"
+						}
+					]
+				},
+				{
+					"include": "#code"
+				},
+				{
+					"match": "\\b(\\w+)\\b\\.",
+					"captures": {
+						"1": {
+							"name": "entity.name.namespace.samt"
+						}
+					}
+				},
+				{
+					"name": "entity.name.type.samt",
+					"match": "\\b(\\w+)\\b"
+				}
+			]
+		},
+		"package": {
+			"begin": "(?<!\\^)\\b(package)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.other.package.samt"
+				}
+			},
+			"end": "(?!\\^)(?=\\b(import|package|alias|record|service|provide|consume)\\b)",
+			"patterns": [
+				{
+					"include": "#code"
+				},
+				{
+					"name": "entity.name.namespace.samt",
+					"match": "\\b(\\w+)\\b"
+				}
+			]
+		},
+		"type-alias": {
+			"begin": "(?<!\\^)\\b(alias)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.typealias.samt"
+				}
+			},
+			"end": ":",
+			"patterns": [
+				{
+					"include": "#code"
+				},
+				{
+					"name": "entity.name.type.samt",
+					"match": "\\b\\w+\\b"
+				}
+			]
+		},
+		"record-declaration": {
+			"name": "meta.record.samt",
+			"begin": "(?<!\\^)\\b(record)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.record.samt"
+				}
+			},
+			"end": "}",
+			"patterns": [
+				{
+					"begin": "(?<=\\brecord\\b)",
+					"end": "(?=(\\b(extends)\\b))|(?={)",
+					"patterns": [
+						{
+							"include": "#code"
+						},
+						{
+							"name": "entity.name.type.record.samt",
+							"match": "\\b(\\w+)\\b"
+						}
+					]
+				},
+				{
+					"begin": "(?<=\\bextends\\b)",
+					"end": "(?={)",
+					"patterns": [
+						{
+							"include": "#code"
+						},
+						{
+							"name": "entity.name.type.record.samt",
+							"match": "\\b(\\w+)\\b"
+						}
+					]
+				},
+				{
+					"begin": "{",
+					"end": "(?=})",
+					"patterns": [
+						{
+							"include": "#code"
+						},
+						{
+							"begin": "\\b(\\w+)\\b",
+							"beginCaptures": {
+								"1": {
+									"name": "variable.other.property.record.samt"
+								}
+							},
+							"end": ":",
+							"patterns": [
+								{
+									"include": "#code"
+								}
+							]
+						}
+					]
+				},
+				{
+					"include": "#code"
+				}
+			]
+		},
+		"enum-declaration": {
+			"name": "meta.enum.samt",
+			"begin": "(?<!\\^)\\b(enum)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.enum.samt"
+				}
+			},
+			"end": "}",
+			"patterns": [
+				{
+					"include": "#code"
+				},
+				{
+					"begin": "\\b(\\w+)\\b",
+					"beginCaptures": {
+						"1": {
+							"name": "entity.name.type.enum.samt"
+						}
+					},
+					"end": "{",
+					"patterns": [
+						{
+							"include": "#code"
+						}
+					]
+				},
+				{
+					"begin": "(?<={)",
+					"end": "(?=})",
+					"patterns": [
+						{
+							"include": "#code"
+						},
+						{
+							"name": "variable.other.enummember.samt",
+							"match": "\\b(\\w+)\\b"
+						}
+					]
+				}
+			]
+		},
+		"service-declaration": {
+			"name": "meta.service.samt",
+			"begin": "(?<!\\^)\\b(service)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.interface.service.samt"
+				}
+			},
+			"end": "}",
+			"patterns": [
+				{
+					"include": "#code"
+				},
+				{
+					"begin": "\\b(\\w+)\\b",
+					"beginCaptures": {
+						"1": {
+							"name": "entity.name.type.interface.service.samt"
+						}
+					},
+					"end": "{",
+					"patterns": [
+						{
+							"include": "#code"
+						}
+					]
+				},
+				{
+					"begin": "(?<={)",
+					"end": "(?=})",
+					"patterns": [
+						{
+							"begin": "\\b(\\w+)\\b\\s*\\(",
+							"beginCaptures": {
+								"1": {
+									"name": "entity.name.function.member.operation.samt"
+								}
+							},
+							"end": "\\)",
+							"patterns": [
+								{
+									"include": "#code"
+								},
+								{
+									"begin": "\\b(\\w+)\\b",
+									"beginCaptures": {
+										"1": {
+											"name": "variable.parameter.samt"
+										}
+									},
+									"end": ":",
+									"patterns": [
+										{
+											"include": "#code"
+										}
+									]
+								}
+							]
+						},
+						{
+							"include": "#code"
+						},
+						{
+							"begin": "(?<!\\^)(?<=\\b(raises)\\b)",
+							"end": "(?=(\\w+\\s*\\()|})",
+							"patterns": [
+								{
+									"include": "#code"
+								},
+								{
+									"name": "entity.name.type.record.fault.samt",
+									"match": "\\b(\\w+)\\b"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		"provider-declaration": {
+			"name": "meta.provider.samt",
+			"begin": "(?<!\\^)\\b(provide)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.provider.samt"
+				}
+			},
+			"end": "}",
+			"patterns": [
+				{
+					"include": "#code"
+				},
+				{
+					"begin": "(?<!\\^)(?<=\\b(provide)\\b)",
+					"end": "{",
+					"patterns": [
+						{
+							"include": "#code"
+						},
+						{
+							"name": "entity.name.type.provider.samt",
+							"match": "\\b(\\w+)\\b"
+						}
+					]
+				},
+				{
+					"begin": "(?<={)",
+					"end": "(?=})",
+					"patterns": [
+						{
+							"name": "meta.provider.implements.samt",
+							"begin": "(?<!\\^)(?<=\\b(implements)\\b)",
+							"end": "(?!\\^)(?=(\\b(implements|transport)\\b)|})",
+							"patterns": [
+								{
+									"begin": "{",
+									"end": "}",
+									"patterns": [
+										{
+											"include": "#code"
+										},
+										{
+											"name": "entity.name.function.member.operation.samt",
+											"match": "\\b(\\w+)\\b"
+										}
+									]
+								},
+								{
+									"include": "#code"
+								},
+								{
+									"name": "entity.name.type.interface.service.samt",
+									"match": "\\b(\\w+)\\b"
+								}
+							]
+						},
+						{
+							"name": "meta.provider.transport.samt",
+							"begin": "(?<!\\^)(?<=\\b(transport)\\b)",
+							"end": "(?!\\^)(?=(\\b(implements|transport)\\b)|})",
+							"patterns": [
+								{
+									"include": "#code"
+								},
+								{
+									"name": "support.function.transport.samt",
+									"match": "\\b(\\w+)\\b"
+								}
+							]
+						},
+						{
+							"include": "#code"
+						}
+					]
+				}
+			]
+		},
+		"consumer-declaration": {
+			"name": "meta.consumer.samt",
+			"begin": "(?<!\\^)\\b(consume)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.consumer.samt"
+				}
+			},
+			"end": "}",
+			"patterns": [
+				{
+					"begin": "(?<!\\^)(?<=\\b(consume)\\b)",
+					"end": "{",
+					"patterns": [
+						{
+							"include": "#code"
+						},
+						{
+							"name": "entity.name.type.provider.samt",
+							"match": "\\b(\\w+)\\b"
+						}
+					]
+				},
+				{
+					"name": "meta.consumer.uses.samt",
+					"begin": "(?<!\\^)(?<=\\b(uses)\\b)",
+					"end": "((?!\\^)(?=\\b(uses)\\b))]|(?=})",
+					"patterns": [
+						{
+							"begin": "{",
+							"end": "}",
+							"patterns": [
+								{
+									"include": "#code"
+								},
+								{
+									"name": "entity.name.function.member.operation.samt",
+									"match": "\\b(\\w+)\\b"
+								}
+							]
+						},
+						{
+							"include": "#code"
+						},
+						{
+							"name": "entity.name.type.service.samt",
+							"match": "\\b(\\w+)\\b"
+						}
+					]
+				},
+				{
+					"include": "#code"
+				}
+			]
+		},
+		"delimiter": {
+			"name": "punctuation.separator.delimiter.samt",
+			"match": ","
+		},
+		"annotation": {
+			"name": "meta.declaration.annotation.samt",
+			"begin": "(@)\\s*\\b(\\w+)\\b\\s*\\(",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.definition.annotation.samt"
+				},
+				"2": {
+					"name": "entity.name.type.annotation.samt"
+				}
+			},
+			"end": "\\)",
+			"patterns": [
+				{
+					"include": "#code"
+				}
+			]
+		},
+		"comments": {
+			"patterns": [
+				{
+					"include": "#block-comment"
+				},
+				{
+					"include": "#line-comment"
+				}
+			]
+		},
+		"block-comment": {
+			"name": "comment.block.samt",
+			"begin": "/\\*",
+			"end": "\\*/"
+		},
+		"line-comment": {
+			"name": "comment.line.double-slash.samt",
+			"begin": "//",
+			"end": "$"
+		},
+		"inner-keywords": {
+			"name": "keyword.other.$1.samt",
+			"match": "(?<!\\^)\\b(as|extends|raises|implements|transport|uses|raises|async|oneway)\\b"
+		},
+		"expressions": {
+			"patterns": [
+				{
+					"include": "#boolean-constant"
+				},
+				{
+					"include": "#string-literal"
+				},
+				{
+					"include": "#number-literal"
+				},
+				{
+					"include": "#type"
+				},
+				{
+					"include": "#constraint"
+				},
+				{
+					"include": "#generics"
+				},
+				{
+					"include": "#parenthesized-expression"
+				},
+				{
+					"include": "#object-literal"
+				},
+				{
+					"include": "#array-literal"
+				}
+			]
+		},
+		"boolean-constant": {
+			"name": "constant.language.boolean.samt",
+			"match": "(?<!\\^)\\b(true|false)\\b"
+		},
+		"string-literal": {
 			"name": "string.quoted.double.samt",
 			"begin": "\"",
 			"end": "\"",
@@ -69,15 +541,91 @@
 				}
 			]
 		},
-		"lineComments": {
-			"name": "comment.line.double-dash",
-			"begin": "//",
-			"end": "\n"
+		"number-literal": {
+			"name": "constant.numeric.decimal.samt",
+			"match": "\\b\\d+(\\.\\d+)?"
 		},
-		"blockComments": {
-			"name": "comment.block",
-			"begin": "/\\*",
-			"end": "\\*/"
+		"invalid-identifier": {
+			"name": "invalid.illegal.identifier.samt",
+			"match": "\\b\\d+(\\.\\d+)?[a-zA-Z_]\\w*\\b"
+		},
+		"type": {
+			"name": "meta.type.samt",
+			"comment": "types are usually declared after colons",
+			"match": "(?<=:)\\s*\\b([a-zA-Z_]\\w*)\\b",
+			"captures": {
+				"1": {
+					"name": "entity.name.type.samt"
+				}
+			}
+		},
+		"constraint": {
+			"begin": "\\b(\\w+)\\b\\s*\\(",
+			"beginCaptures": {
+				"1": {
+					"name": "entity.name.function.constraint.samt"
+				}
+			},
+			"end": "\\)",
+			"patterns": [
+				{
+					"include": "#code"
+				}
+			]
+		},
+		"generics": {
+			"begin": "<",
+			"end": ">",
+			"patterns": [
+				{
+					"include": "#code"
+				},
+				{
+					"name": "entity.name.type.samt",
+					"match": "\\b(\\w+)\\b"
+				}
+			]
+		},
+		"parenthesized-expression": {
+			"begin": "\\(",
+			"end": "\\)",
+			"patterns": [
+				{
+					"include": "#code"
+				}
+			]
+		},
+		"object-literal": {
+			"begin": "{",
+			"end": "}",
+			"patterns": [
+				{
+					"include": "#code"
+				},
+				{
+					"begin": "\\b(\\w+)\\b",
+					"beginCaptures": {
+						"1": {
+							"name": "variable.other.property.object.samt"
+						}
+					},
+					"end": ":",
+					"patterns": [
+						{
+							"include": "#code"
+						}
+					]
+				}
+			]
+		},
+		"array-literal": {
+			"begin": "\\[",
+			"end": "\\]",
+			"patterns": [
+				{
+					"include": "#code"
+				}
+			]
 		}
 	},
 	"scopeName": "source.samt"

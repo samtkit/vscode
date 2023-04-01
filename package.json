@@ -1,6 +1,10 @@
 {
   "name": "samt",
   "displayName": "SAMT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samtkit/vscode"
+  },
   "description": "VS Code support for the Simple API modeling toolkit",
   "version": "0.0.1",
   "engines": {

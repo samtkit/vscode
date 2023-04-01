@@ -25,8 +25,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
+          cache: pnpm
       - run: pnpm install
-      - run: xvfb-run -a pnpm test
+      - run: xvfb-run -a pnpm pretest && xvfb-run -a pnpm test
         if: runner.os == 'Linux'
-      - run: pnpm test
+      - run: pnpm pretest && pnpm test
         if: runner.os != 'Linux'

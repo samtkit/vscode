@@ -27,8 +27,14 @@ jobs:
           node-version: 16.x
           cache: pnpm
       - run: pnpm install
-      - run: pnpm build
-      - run: xvfb-run -a pnpm test
+      - run: pnpm run build
+      - run: xvfb-run -a pnpm run test
         if: runner.os == 'Linux'
-      - run: pnpm test
+      - run: pnpm run test
         if: runner.os != 'Linux'
+      - run: pnpm run package --out samt.vsix
+      - name: Upload extension
+        uses: actions/upload-artifact@v3
+        with:
+          name: extension
+          path: samt.vsix

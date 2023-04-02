@@ -1,0 +1,40 @@
+name: Build and Test
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm run build
+      - run: xvfb-run -a pnpm run test
+        if: runner.os == 'Linux'
+      - run: pnpm run test
+        if: runner.os != 'Linux'
+      - run: pnpm run package --out samt.vsix
+      - name: Upload extension
+        uses: actions/upload-artifact@v3
+        with:
+          name: extension
+          path: samt.vsix

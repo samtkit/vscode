@@ -1,4 +1,12 @@
 .vscode/**
 .vscode-test/**
+src/**
 .gitignore
-vsc-extension-quickstart.md
+.npmrc
+**/tsconfig.json
+**/.eslintrc.json
+**/*.map
+**/*.ts
+.pnpm-store
+.github
+images

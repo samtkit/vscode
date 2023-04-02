@@ -1,6 +1,8 @@
 {
   "name": "samt",
   "displayName": "SAMT",
+  "publisher": "samt",
+  "preview": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/samtkit/vscode"

@@ -7,6 +7,7 @@
   },
   "description": "VS Code support for the Simple API modeling toolkit",
   "version": "0.0.1",
+  "packageManager": "pnpm@8.1.0",
   "engines": {
     "vscode": "^1.77.0"
   },
@@ -37,12 +38,13 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "pnpm run compile && pnpm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "pnpm test-compile && pnpm run lint && node ./out/test/runTest.js",
+    "vscode:prepublish": "pnpm run esbuild-base --minify",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "build": "pnpm run esbuild-base --sourcemap",
+    "watch": "pnpm run esbuild-base --sourcemap --watch",
+    "test-compile": "tsc -p ./"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
@@ -51,6 +53,7 @@
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "@vscode/test-electron": "^2.3.0",
+    "esbuild": "^0.17.15",
     "eslint": "^8.36.0",
     "glob": "^9.3.2",
     "mocha": "^10.2.0",

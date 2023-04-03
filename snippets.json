@@ -1,0 +1,48 @@
+{
+    "Record Declaration": {
+        "prefix": "record",
+        "body": [
+            "record ${1:Name} {",
+            "\t${2:fieldName}: ${3:Type}",
+            "}"
+        ]
+    },
+    "Service Declaration": {
+        "prefix": "service",
+        "body": [
+            "service ${1:Name} {",
+            "\t${2:operationName}(${3:paramName}: ${4:ParamType}): ${5:ReturnType}",
+            "}"
+        ]
+    },
+    "Enum Declaration": {
+        "prefix": "enum",
+        "body": [
+            "enum ${1:Name} {",
+            "\t${2:MEMBER}",
+            "}"
+        ]
+    },
+    "Provider Declaration": {
+        "prefix": "provider",
+        "body": [
+            "provide ${1:Name} {",
+            "\timplements ${2:ServiceName}",
+            "",
+            "\ttransport ${3:HTTP}",
+            "}"
+        ]
+    },
+    "Consumer Declaration": {
+        "prefix": "consumer",
+        "body": [
+            "consume ${1:ProviderName} {",
+            "\tuses ${2:ServiceName}",
+            "}"
+        ]
+    },
+    "Type Alias": {
+        "prefix": "alias",
+        "body": "alias ${1:AliasName} : ${2:Type}"
+    }
+}

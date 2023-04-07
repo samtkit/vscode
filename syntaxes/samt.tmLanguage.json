@@ -8,6 +8,9 @@
 			"include": "#code"
 		}
 	],
+	"fileTypes": [
+		"samt"
+	],
 	"repository": {
 		"code": {
 			"patterns": [
@@ -181,7 +184,7 @@
 									"name": "variable.other.property.record.samt"
 								}
 							},
-							"end": ":",
+							"end": "(?=:)",
 							"patterns": [
 								{
 									"include": "#code"
@@ -287,7 +290,7 @@
 											"name": "variable.parameter.samt"
 										}
 									},
-									"end": ":",
+									"end": "(?=:)",
 									"patterns": [
 										{
 											"include": "#code"
@@ -455,16 +458,18 @@
 		},
 		"annotation": {
 			"name": "meta.declaration.annotation.samt",
-			"begin": "(@)\\s*\\b(\\w+)\\b\\s*\\(",
+			"begin": "@",
 			"beginCaptures": {
-				"1": {
+				"0": {
 					"name": "punctuation.definition.annotation.samt"
-				},
-				"2": {
+				}
+			},
+			"end": "\\b\\w+\\b",
+			"endCaptures": {
+				"0": {
 					"name": "entity.name.type.annotation.samt"
 				}
 			},
-			"end": "\\)",
 			"patterns": [
 				{
 					"include": "#code"
@@ -550,14 +555,19 @@
 			"match": "\\b\\d+(\\.\\d+)?[a-zA-Z_]\\w*\\b"
 		},
 		"type": {
-			"name": "meta.type.samt",
 			"comment": "types are usually declared after colons",
-			"match": "(?<=:)\\s*\\b([a-zA-Z_]\\w*)\\b",
-			"captures": {
-				"1": {
+			"begin": ":",
+			"end": "\\b\\w+\\b",
+			"endCaptures": {
+				"0": {
 					"name": "entity.name.type.samt"
 				}
-			}
+			},
+			"patterns": [
+				{
+					"include": "#code"
+				}
+			]
 		},
 		"constraint": {
 			"begin": "\\b(\\w+)\\b\\s*\\(",

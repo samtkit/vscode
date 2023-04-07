@@ -4,7 +4,7 @@
 // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
 {
 	"version": "0.2.0",
-    "configurations": [
+	"configurations": [
 		{
 			"name": "Run Extension",
 			"type": "extensionHost",
@@ -29,7 +29,7 @@
 			"outFiles": [
 				"${workspaceFolder}/out/test/**/*.js"
 			],
-			"preLaunchTask": "Test Compile"
+			"preLaunchTask": "npm: test-compile"
 		}
 	]
 }

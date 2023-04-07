@@ -23,13 +23,6 @@
 				"kind": "build",
 				"isDefault": true
 			}
-		},
-		{
-			"label": "Test Compile",
-			"type": "npm",
-			"script": "test-compile",
-			"problemMatcher": "$tsc",
-			"group": "build"
 		}
 	]
 }

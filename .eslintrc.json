@@ -12,13 +12,20 @@
         "@typescript-eslint/naming-convention": "warn",
         "@typescript-eslint/semi": "warn",
         "curly": "warn",
-        "eqeqeq": "warn",
+        "eqeqeq": [
+            "warn",
+            "always",
+            {
+                "null": "ignore"
+            }
+        ],
         "no-throw-literal": "warn",
         "semi": "off"
     },
     "ignorePatterns": [
         "out",
         "dist",
-        "**/*.d.ts"
+        "**/*.d.ts",
+        "src/test/generated"
     ]
 }

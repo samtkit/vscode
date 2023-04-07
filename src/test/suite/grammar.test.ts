@@ -1,5 +1,5 @@
 import assert from 'assert/strict';
-import { Convert, TextmateGrammar, Pattern } from '../generated/textmate-grammar';
+import { Convert, TextmateGrammar, Pattern } from '../generated/textmateGrammar';
 import { readFile } from 'fs/promises';
 import path from 'path';
 

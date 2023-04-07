@@ -10,6 +10,21 @@ async function readGrammar(): Promise<TextmateGrammar> {
 }
 
 suite('TextMate Grammar Test Suite', () => {
+    test('scope name is source.samt', async () => {
+        const grammar = await readGrammar();
+        assert.equal(grammar.scopeName, 'source.samt');
+    });
+
+    test('name is SAMT', async () => {
+        const grammar = await readGrammar();
+        assert.equal(grammar.name, 'SAMT');
+    });
+
+    test('fileTypes are samt', async () => {
+        const grammar = await readGrammar();
+        assert.deepEqual(grammar.fileTypes, ['samt']);
+    });
+
     test('#code is included in all patterns', async () => {
         function isStringOrComment({ name }: Pattern): boolean {
             if (name == null) {
@@ -34,5 +49,46 @@ suite('TextMate Grammar Test Suite', () => {
             }
             checkPatternRecursive(value);
         }
+    });
+
+    test('scope names end with .samt', async () => {
+        function checkPatternRecursive({ name, patterns, captures, beginCaptures, endCaptures, whileCaptures }: Pattern) {
+            assert(name == null || name.endsWith('.samt'), `scope name "${name}" does not end with .samt`);
+            patterns?.forEach(checkPatternRecursive);
+            for (const c of [captures, beginCaptures, endCaptures, whileCaptures]) {
+                if (c == null) {
+                    continue;
+                }
+                Object.values(c).forEach(checkPatternRecursive);
+            }
+        }
+
+        const grammar = await readGrammar();
+        grammar.patterns.forEach(checkPatternRecursive);
+        Object.values(grammar.repository ?? {}).forEach(checkPatternRecursive);
+    });
+
+    test('no unused values in repositories', async () => {
+        function findUsedPatterns(patterns: Pattern[]): Set<string> {
+            const keys = new Set<string>();
+            for (const { include, patterns: childPatterns } of patterns) {
+                if (include?.startsWith('#')) {
+                    keys.add(include.substring(1));
+                }
+                if (childPatterns) {
+                    findUsedPatterns(childPatterns).forEach(k => keys.add(k));
+                }
+            }
+            return keys;
+        }
+
+        const grammar = await readGrammar();
+        if (grammar.repository == null) {
+            return;
+        }
+
+        const allKeys = new Set(Object.keys(grammar.repository));
+        const encounteredKeys = new Set([...findUsedPatterns(grammar.patterns), ...findUsedPatterns(Object.values(grammar.repository))]);
+        assert.deepEqual(encounteredKeys, allKeys);
     });
 });

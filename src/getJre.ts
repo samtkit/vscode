@@ -1,5 +1,7 @@
-import { IJavaRuntime, IJavaVersion, IOptions, findRuntimes, getRuntime } from 'jdk-utils';
+import { IJavaRuntime, IJavaVersion, IOptions, findRuntimes, getRuntime, JAVA_FILENAME } from 'jdk-utils';
 import { workspace, window } from 'vscode';
+import which from 'which';
+import { realpath } from 'fs/promises';
 
 const minimumVersion = 17;
 const jdkUtilsOptions: IOptions = { withVersion: true, withTags: true };
@@ -10,10 +12,11 @@ type JavaRuntime = IJavaRuntime & {
     isJavaHomeEnv: boolean;
     isJdkHomeEnv: boolean;
     isInPathEnv: boolean;
+    isExeInPathEnv: boolean;
 };
 
-function convertJre(jre: IJavaRuntime): JavaRuntime {
-    const { version, isJavaHomeEnv, isJdkHomeEnv, isInPathEnv } = jre;
+function convertJre(jre: IJavaRuntime, javaInPath: string | null = null): JavaRuntime {
+    const { homedir, version, isJavaHomeEnv, isJdkHomeEnv, isInPathEnv } = jre;
     if (version == null) {
         throw new Error('Missing JRE version information');
     }
@@ -22,7 +25,8 @@ function convertJre(jre: IJavaRuntime): JavaRuntime {
         version: version,
         isJavaHomeEnv: isJavaHomeEnv ?? false,
         isJdkHomeEnv: isJdkHomeEnv ?? false,
-        isInPathEnv: isInPathEnv ?? false
+        isInPathEnv: isInPathEnv ?? false,
+        isExeInPathEnv: javaInPath === `${homedir}/bin/${JAVA_FILENAME}`
     };
 }
 
@@ -54,13 +58,16 @@ async function getConfiguredJre(): Promise<JavaRuntime | null> {
 
 function compareSource(jre1: JavaRuntime, jre2: JavaRuntime) {
     if (jre1.isJavaHomeEnv !== jre2.isJavaHomeEnv) {
-        return jre1.isJavaHomeEnv ? 1 : -1;
+        return jre1.isJavaHomeEnv ? -1 : 1;
     }
     if (jre1.isJdkHomeEnv !== jre2.isJdkHomeEnv) {
-        return jre1.isJdkHomeEnv ? 1 : -1;
+        return jre1.isJdkHomeEnv ? -1 : 1;
     }
     if (jre1.isInPathEnv !== jre2.isInPathEnv) {
-        return jre1.isInPathEnv ? 1 : -1;
+        return jre1.isInPathEnv ? -1 : 1;
+    }
+    if (jre1.isExeInPathEnv !== jre2.isExeInPathEnv) {
+        return jre1.isExeInPathEnv ? -1 : 1;
     }
     return 0;
 }
@@ -88,11 +95,13 @@ function compareVersion(jre1: JavaRuntime, jre2: JavaRuntime) {
 async function findJre(): Promise<JavaRuntime | null> {
     const jres = await findRuntimes(jdkUtilsOptions);
     if (jres.length === 0) {
-        await window.showErrorMessage('No Java 17 (or newer) installations found. Either set the JAVA_HOME environment variable or configure the samt.java.home settings');
+        await window.showErrorMessage('No Java 17 (or newer) installations found. If you have Java installed either set the JAVA_HOME environment variable or configure the samt.java.home settings');
         return null;
     }
 
-    const suitableJres = jres.map(convertJre).filter(meetsMinimumRequirement);
+    const javaInPath: string | null = await which(JAVA_FILENAME, { nothrow: true });
+    const resolvedJavaInPath = javaInPath != null ? await realpath(javaInPath) : null;
+    const suitableJres = jres.map(jre => convertJre(jre, resolvedJavaInPath)).filter(meetsMinimumRequirement);
     if (suitableJres.length === 0) {
         await window.showErrorMessage('No Java installtion found that meets the minimum version requirement (Java 17)');
         return null;

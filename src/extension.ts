@@ -1,5 +1,8 @@
 import * as vscode from 'vscode';
+import getJre from './getJre';
 
-export function activate(context: vscode.ExtensionContext) { }
+export async function activate(context: vscode.ExtensionContext) {
+    const jre = await getJre();
+}
 
 export function deactivate() { }

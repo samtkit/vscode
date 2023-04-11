@@ -44,6 +44,18 @@
         "language": "samt",
         "path": "./snippets.json"
       }
+    ],
+    "configuration": [
+      {
+        "title": "SAMT - Simple API Modeling Toolkit",
+        "properties": {
+          "samt.java.home": {
+            "type": "string",
+            "default": "",
+            "description": "Path to a java installation for the language server"
+          }
+        }
+      }
     ]
   },
   "scripts": {
@@ -71,5 +83,8 @@
     "mocha": "^10.2.0",
     "typescript": "^5.0.4"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "jdk-utils": "^0.4.4"
+  }
 }

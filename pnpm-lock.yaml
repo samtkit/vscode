@@ -1,5 +1,10 @@
 lockfileVersion: '6.0'
 
+dependencies:
+  jdk-utils:
+    specifier: ^0.4.4
+    version: 0.4.4
+
 devDependencies:
   '@types/mocha':
     specifier: ^10.0.1
@@ -1433,6 +1438,11 @@ packages:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
     dev: true
+
+  /jdk-utils@0.4.4:
+    resolution: {integrity: sha512-QSwVdPtwdHRvY6zDD0GOZo5Fu7AdgfNDyizZWhk16jnrcLTPbmsww4WLDC+5wyxCWm8izZZfmjTVcicdreuJLw==}
+    hasBin: true
+    dev: false
 
   /js-sdsl@4.4.0:
     resolution: {integrity: sha512-FfVSdx6pJ41Oa+CF7RDaFmTnCaFhua+SNYQX74riGOpl96x+2jQCqEfQ2bnXu/5DPCqlRuiqyvTJM0Qjz26IVg==}

@@ -10,3 +10,4 @@ src/**
 .pnpm-store
 .github
 images
+pnpm-lock.yaml

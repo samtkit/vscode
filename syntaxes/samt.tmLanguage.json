@@ -117,13 +117,14 @@
 			]
 		},
 		"type-alias": {
+			"name": "meta.typealias.samt",
 			"begin": "(?<!\\^)\\b(alias)\\b",
 			"beginCaptures": {
 				"1": {
 					"name": "storage.type.typealias.samt"
 				}
 			},
-			"end": ":",
+			"end": "(?!\\^)(?=\\b(import|package|alias|record|service|provide|consume)\\b)",
 			"patterns": [
 				{
 					"include": "#code"
@@ -142,7 +143,7 @@
 					"name": "storage.type.record.samt"
 				}
 			},
-			"end": "}",
+			"end": "(?!\\^)(?=\\b(import|package|alias|record|service|provide|consume)\\b)",
 			"patterns": [
 				{
 					"begin": "(?<=\\brecord\\b)",
@@ -171,8 +172,9 @@
 					]
 				},
 				{
+					"name": "meta.record.body.samt",
 					"begin": "{",
-					"end": "(?=})",
+					"end": "}",
 					"patterns": [
 						{
 							"include": "#code"
@@ -555,6 +557,7 @@
 			"match": "\\b\\d+(\\.\\d+)?[a-zA-Z_]\\w*\\b"
 		},
 		"type": {
+			"name": "meta.type.samt",
 			"comment": "types are usually declared after colons",
 			"begin": ":",
 			"end": "\\b\\w+\\b",

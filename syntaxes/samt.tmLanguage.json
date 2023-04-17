@@ -66,11 +66,11 @@
 					"name": "keyword.other.import.samt"
 				}
 			},
-			"end": "(?!\\^)(?=\\b(import|package|alias|record|service|provide|consume)\\b)",
+			"end": "(?!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
 			"patterns": [
 				{
 					"begin": "(?<!\\^)(?<=\\b(as)\\b)",
-					"end": "(?!\\^)(?=\\b(import|package|alias|record|service|provide|consume)\\b)",
+					"end": "(?!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
 					"patterns": [
 						{
 							"include": "#code"
@@ -105,7 +105,7 @@
 					"name": "keyword.other.package.samt"
 				}
 			},
-			"end": "(?!\\^)(?=\\b(import|package|alias|record|service|provide|consume)\\b)",
+			"end": "(?!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
 			"patterns": [
 				{
 					"include": "#code"
@@ -117,13 +117,14 @@
 			]
 		},
 		"type-alias": {
+			"name": "meta.typealias.samt",
 			"begin": "(?<!\\^)\\b(alias)\\b",
 			"beginCaptures": {
 				"1": {
 					"name": "storage.type.typealias.samt"
 				}
 			},
-			"end": ":",
+			"end": "(?!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
 			"patterns": [
 				{
 					"include": "#code"
@@ -142,11 +143,11 @@
 					"name": "storage.type.record.samt"
 				}
 			},
-			"end": "}",
+			"end": "(?!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
 			"patterns": [
 				{
-					"begin": "(?<=\\brecord\\b)",
-					"end": "(?=(\\b(extends)\\b))|(?={)",
+					"begin": "(?<!\\^)(?<=\\brecord\\b)",
+					"end": "((?!\\^)(?=(\\b(extends)\\b)))|(?={)",
 					"patterns": [
 						{
 							"include": "#code"
@@ -158,7 +159,7 @@
 					]
 				},
 				{
-					"begin": "(?<=\\bextends\\b)",
+					"begin": "(?<!\\^)(?<=\\bextends\\b)",
 					"end": "(?={)",
 					"patterns": [
 						{
@@ -172,7 +173,7 @@
 				},
 				{
 					"begin": "{",
-					"end": "(?=})",
+					"end": "}",
 					"patterns": [
 						{
 							"include": "#code"
@@ -557,15 +558,19 @@
 		"type": {
 			"comment": "types are usually declared after colons",
 			"begin": ":",
-			"end": "\\b\\w+\\b",
+			"end": "(\\b[_A-Za-z]\\w*\\b)|(?=[},\\):]|\\b\\d)",
 			"endCaptures": {
-				"0": {
+				"1": {
 					"name": "entity.name.type.samt"
 				}
 			},
 			"patterns": [
 				{
 					"include": "#code"
+				}, 
+				{
+					"name": "entity.name.type.samt",
+					"match": "\\b\\w+\\b"
 				}
 			]
 		},

@@ -146,8 +146,8 @@
 			"end": "(?!\\^)(?=\\b(import|package|alias|record|service|provide|consume)\\b)",
 			"patterns": [
 				{
-					"begin": "(?<=\\brecord\\b)",
-					"end": "(?=(\\b(extends)\\b))|(?={)",
+					"begin": "(?<!\\^)(?<=\\brecord\\b)",
+					"end": "((?!\\^)(?=(\\b(extends)\\b)))|(?={)",
 					"patterns": [
 						{
 							"include": "#code"
@@ -159,7 +159,7 @@
 					]
 				},
 				{
-					"begin": "(?<=\\bextends\\b)",
+					"begin": "(?<!\\^)(?<=\\bextends\\b)",
 					"end": "(?={)",
 					"patterns": [
 						{

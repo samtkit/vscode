@@ -558,7 +558,7 @@
 		"type": {
 			"comment": "types are usually declared after colons",
 			"begin": ":",
-			"end": "(\\b\\w+\\b)|(?=[},\\):])",
+			"end": "(\\b[_A-Za-z]\\w*\\b)|(?=[},\\):]|\\b\\d)",
 			"endCaptures": {
 				"1": {
 					"name": "entity.name.type.samt"

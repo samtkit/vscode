@@ -172,7 +172,6 @@
 					]
 				},
 				{
-					"name": "meta.record.body.samt",
 					"begin": "{",
 					"end": "}",
 					"patterns": [
@@ -557,18 +556,21 @@
 			"match": "\\b\\d+(\\.\\d+)?[a-zA-Z_]\\w*\\b"
 		},
 		"type": {
-			"name": "meta.type.samt",
 			"comment": "types are usually declared after colons",
 			"begin": ":",
-			"end": "\\b\\w+\\b",
+			"end": "(\\b\\w+\\b)|(?=[},\\):])",
 			"endCaptures": {
-				"0": {
+				"1": {
 					"name": "entity.name.type.samt"
 				}
 			},
 			"patterns": [
 				{
 					"include": "#code"
+				}, 
+				{
+					"name": "entity.name.type.samt",
+					"match": "\\b\\w+\\b"
 				}
 			]
 		},

@@ -1,9 +1,20 @@
 # Change Log
 
-All notable changes to the "samt" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
 ## [Unreleased]
 
-- Initial release
+
+## [0.0.2] - Pre-release
+
+### Added
+
+- Snippet support
+
+### Changed
+
+- Fixed some edge-cases in syntax highlighting
+
+## [0.0.1] - Pre-release
+
+### Added
+
+- Support *.samt syntax highlighting

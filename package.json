@@ -27,7 +27,7 @@
           "samt"
         ],
         "extensions": [
-          "samt"
+          ".samt"
         ],
         "configuration": "./language-configuration.json"
       }

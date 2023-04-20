@@ -11,3 +11,5 @@ src/**
 .github
 images
 pnpm-lock.yaml
+out/**
+!out/extension.js

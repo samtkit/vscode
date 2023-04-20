@@ -2,6 +2,7 @@ import { IJavaRuntime, IJavaVersion, IOptions, findRuntimes, getRuntime, JAVA_FI
 import { workspace, window } from 'vscode';
 import which from 'which';
 import { realpath } from 'fs/promises';
+import path from 'path';
 
 const minimumVersion = 17;
 const jdkUtilsOptions: IOptions = { withVersion: true, withTags: true };
@@ -26,7 +27,7 @@ function convertJre(jre: IJavaRuntime, javaInPath: string | null = null): JavaRu
         isJavaHomeEnv: isJavaHomeEnv ?? false,
         isJdkHomeEnv: isJdkHomeEnv ?? false,
         isInPathEnv: isInPathEnv ?? false,
-        isExeInPathEnv: javaInPath === `${homedir}/bin/${JAVA_FILENAME}`
+        isExeInPathEnv: javaInPath === path.join(homedir, 'bin', JAVA_FILENAME)
     };
 }
 

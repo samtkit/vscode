@@ -4,3 +4,13 @@ node_modules
 .pnpm-store
 .vscode-test
 *.vsix
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

@@ -22,7 +22,7 @@ function convertJre(jre: IJavaRuntime, javaInPath: string | null = null): JavaRu
     }
     return {
         ...jre,
-        version: version,
+        version,
         isJavaHomeEnv: isJavaHomeEnv ?? false,
         isJdkHomeEnv: isJdkHomeEnv ?? false,
         isInPathEnv: isInPathEnv ?? false,
@@ -98,8 +98,8 @@ async function findJre(): Promise<JavaRuntime | null> {
         await window.showErrorMessage('No Java 17 (or newer) installations found. If you have Java installed either set the JAVA_HOME environment variable or configure the samt.java.home settings');
         return null;
     }
-
-    const javaInPath: string | null = await which(JAVA_FILENAME, { nothrow: true });
+    // @types/which has an incorrect return type for nothrow: true
+    const javaInPath = await which(JAVA_FILENAME, { nothrow: true }) as string | null;
     const resolvedJavaInPath = javaInPath != null ? await realpath(javaInPath) : null;
     const suitableJres = jres.map(jre => convertJre(jre, resolvedJavaInPath)).filter(meetsMinimumRequirement);
     if (suitableJres.length === 0) {

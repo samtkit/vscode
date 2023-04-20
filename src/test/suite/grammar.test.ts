@@ -50,7 +50,7 @@ suite('TextMate Grammar Test Suite', () => {
 
     test('scope names end with .samt', async () => {
         function checkPatternRecursive({ name, patterns, captures, beginCaptures, endCaptures, whileCaptures }: Pattern) {
-            assert(name == null || name.endsWith('.samt'), `scope name "${name}" does not end with .samt`);
+            assert(name == null || name.endsWith('.samt'), `scope name "${name ?? ''}" does not end with .samt`);
             patterns?.forEach(checkPatternRecursive);
             for (const c of [captures, beginCaptures, endCaptures, whileCaptures]) {
                 if (c == null) {

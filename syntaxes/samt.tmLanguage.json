@@ -166,6 +166,20 @@
 							"include": "#code"
 						},
 						{
+							"begin": "\\b\\w+\\b(?=\\s*\\.)",
+							"beginCaptures": {
+								"0": {
+									"name": "entity.name.namespace.samt"
+								}
+							},
+							"end": "\\.",
+							"patterns": [
+								{
+									"include": "#code"
+								}
+							]
+						},
+						{
 							"name": "entity.name.type.record.samt",
 							"match": "\\b(\\w+)\\b"
 						}
@@ -309,6 +323,20 @@
 							"patterns": [
 								{
 									"include": "#code"
+								},
+								{
+									"begin": "\\b\\w+\\b(?=\\s*\\.)",
+									"beginCaptures": {
+										"0": {
+											"name": "entity.name.namespace.samt"
+										}
+									},
+									"end": "\\.",
+									"patterns": [
+										{
+											"include": "#code"
+										}
+									]
 								},
 								{
 									"name": "entity.name.type.record.fault.samt",
@@ -558,7 +586,7 @@
 		"type": {
 			"comment": "types are usually declared after colons",
 			"begin": ":",
-			"end": "(\\b[_A-Za-z]\\w*\\b)|(?=[},\\):]|\\b\\d)",
+			"end": "(\\b[_A-Za-z]\\w*\\b)(?!\\s*\\.)",
 			"endCaptures": {
 				"1": {
 					"name": "entity.name.type.samt"
@@ -567,9 +595,9 @@
 			"patterns": [
 				{
 					"include": "#code"
-				}, 
+				},
 				{
-					"name": "entity.name.type.samt",
+					"name": "entity.name.namespace.samt",
 					"match": "\\b\\w+\\b"
 				}
 			]

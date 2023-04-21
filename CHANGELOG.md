@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [0.0.3] - Pre-release
+
+### Changed
+
+- Fixed .samt file extension
 
 ## [0.0.2] - Pre-release
 

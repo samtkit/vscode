@@ -1,6 +1,6 @@
 import path from 'path';
 import Mocha from 'mocha';
-import glob from 'glob';
+import { globIterate } from 'glob';
 
 async function runTestsAsync(mocha: Mocha): Promise<number> {
 	return new Promise(resolve => mocha.run(resolve));
@@ -15,8 +15,7 @@ export async function run(): Promise<void> {
 
 	const testsRoot = path.resolve(__dirname, '..');
 
-	const files = await glob('**/**.test.js', { cwd: testsRoot });
-	for (const file of files) {
+	for await (const file of globIterate('**/**.test.js', { cwd: testsRoot })) {
 		mocha.addFile(path.resolve(testsRoot, file));
 	}
 

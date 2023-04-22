@@ -27,7 +27,7 @@
 					"include": "#import"
 				},
 				{
-					"include": "#package"
+					"include": "#package-declaration"
 				},
 				{
 					"include": "#type-alias"
@@ -55,6 +55,9 @@
 				},
 				{
 					"include": "#expressions"
+				},
+				{
+					"include": "#package"
 				}
 			]
 		},
@@ -66,11 +69,12 @@
 					"name": "keyword.other.import.samt"
 				}
 			},
-			"end": "(?!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
+			"end": "(?<!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
 			"patterns": [
 				{
-					"begin": "(?<!\\^)(?<=\\b(as)\\b)",
-					"end": "(?!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
+					"name": "meta.import.as.samt",
+					"begin": "(?<!\\^)(?=\\b(as)\\b)",
+					"end": "(?<!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
 					"patterns": [
 						{
 							"include": "#code"
@@ -85,27 +89,20 @@
 					"include": "#code"
 				},
 				{
-					"match": "\\b(\\w+)\\b\\.",
-					"captures": {
-						"1": {
-							"name": "entity.name.namespace.samt"
-						}
-					}
-				},
-				{
 					"name": "entity.name.type.samt",
 					"match": "\\b(\\w+)\\b"
 				}
 			]
 		},
-		"package": {
+		"package-declaration": {
+			"name": "meta.package.samt",
 			"begin": "(?<!\\^)\\b(package)\\b",
 			"beginCaptures": {
 				"1": {
 					"name": "keyword.other.package.samt"
 				}
 			},
-			"end": "(?!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
+			"end": "(?<!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
 			"patterns": [
 				{
 					"include": "#code"
@@ -124,7 +121,7 @@
 					"name": "storage.type.typealias.samt"
 				}
 			},
-			"end": "(?!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
+			"end": "(?<!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
 			"patterns": [
 				{
 					"include": "#code"
@@ -143,11 +140,11 @@
 					"name": "storage.type.record.samt"
 				}
 			},
-			"end": "(?!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
+			"end": "(?<!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
 			"patterns": [
 				{
 					"begin": "(?<!\\^)(?<=\\brecord\\b)",
-					"end": "((?!\\^)(?=(\\b(extends)\\b)))|(?={)",
+					"end": "((?<!\\^)(?=(\\b(extends)\\b)))|(?={)",
 					"patterns": [
 						{
 							"include": "#code"
@@ -265,6 +262,10 @@
 					"patterns": [
 						{
 							"include": "#code"
+						},
+						{
+							"name": "entity.name.type.interface.service.samt",
+							"match": "\\b\\w+\\b"
 						}
 					]
 				},
@@ -301,10 +302,13 @@
 							]
 						},
 						{
-							"include": "#code"
-						},
-						{
-							"begin": "(?<!\\^)(?<=\\b(raises)\\b)",
+							"name": "meta.service.operation.raises.samt",
+							"begin": "(?<!\\^)\\b(raises)\\b",
+							"beginCaptures": {
+								"1": {
+									"name": "keyword.other.raises.samt"
+								} 
+							},
 							"end": "(?=(\\w+\\s*\\()|})",
 							"patterns": [
 								{
@@ -312,9 +316,12 @@
 								},
 								{
 									"name": "entity.name.type.record.fault.samt",
-									"match": "\\b(\\w+)\\b"
+									"match": "\\b\\w+\\b"
 								}
 							]
+						},
+						{
+							"include": "#code"
 						}
 					]
 				}
@@ -334,15 +341,16 @@
 					"include": "#code"
 				},
 				{
-					"begin": "(?<!\\^)(?<=\\b(provide)\\b)",
+					"begin": "\\b\\w+\\b",
+					"beginCaptures": {
+						"0": {
+							"name": "entity.name.type.provider.samt"
+						}
+					},
 					"end": "{",
 					"patterns": [
 						{
 							"include": "#code"
-						},
-						{
-							"name": "entity.name.type.provider.samt",
-							"match": "\\b(\\w+)\\b"
 						}
 					]
 				},
@@ -352,8 +360,13 @@
 					"patterns": [
 						{
 							"name": "meta.provider.implements.samt",
-							"begin": "(?<!\\^)(?<=\\b(implements)\\b)",
-							"end": "(?!\\^)(?=(\\b(implements|transport)\\b)|})",
+							"begin": "(?<!\\^)\\b(implements)\\b",
+							"beginCaptures": {
+								"1": {
+									"name": "keyword.other.implements.samt"
+								}
+							},
+							"end": "(?<!\\^)(?=(\\b(implements|transport)\\b)|})",
 							"patterns": [
 								{
 									"begin": "{",
@@ -364,7 +377,7 @@
 										},
 										{
 											"name": "entity.name.function.member.operation.samt",
-											"match": "\\b(\\w+)\\b"
+											"match": "\\b\\w+\\b"
 										}
 									]
 								},
@@ -373,14 +386,19 @@
 								},
 								{
 									"name": "entity.name.type.interface.service.samt",
-									"match": "\\b(\\w+)\\b"
+									"match": "\\b\\w+\\b"
 								}
 							]
 						},
 						{
 							"name": "meta.provider.transport.samt",
-							"begin": "(?<!\\^)(?<=\\b(transport)\\b)",
-							"end": "(?!\\^)(?=(\\b(implements|transport)\\b)|})",
+							"begin": "(?<!\\^)\\b(transport)\\b",
+							"beginCaptures": {
+								"1": {
+									"name": "keyword.other.transport.samt"
+								}
+							},
+							"end": "(?<!\\^)(?=(\\b(implements|transport)\\b)|})",
 							"patterns": [
 								{
 									"include": "#code"
@@ -409,7 +427,12 @@
 			"end": "}",
 			"patterns": [
 				{
-					"begin": "(?<!\\^)(?<=\\b(consume)\\b)",
+					"begin": "\\b\\w+\\b",
+					"beginCaptures": {
+						"0": {
+							"name": "entity.name.type.provider.samt"
+						}
+					},
 					"end": "{",
 					"patterns": [
 						{
@@ -417,34 +440,48 @@
 						},
 						{
 							"name": "entity.name.type.provider.samt",
-							"match": "\\b(\\w+)\\b"
+							"match": "\\b\\w+\\b"
 						}
 					]
 				},
 				{
-					"name": "meta.consumer.uses.samt",
-					"begin": "(?<!\\^)(?<=\\b(uses)\\b)",
-					"end": "((?!\\^)(?=\\b(uses)\\b))]|(?=})",
+					"begin": "(?<={)",
+					"end": "(?=})",
 					"patterns": [
 						{
-							"begin": "{",
-							"end": "}",
+							"name": "meta.consumer.uses.samt",
+							"begin": "(?<!\\^)\\b(uses)\\b",
+							"beginCaptures": {
+								"1": {
+									"name": "keyword.other.uses.samt"
+								} 
+							},
+							"end": "((?<!\\^)(?=\\b(uses)\\b))|(?=})",
 							"patterns": [
+								{
+									"begin": "{",
+									"end": "}",
+									"patterns": [
+										{
+											"include": "#code"
+										},
+										{
+											"name": "entity.name.function.member.operation.samt",
+											"match": "\\b\\w+\\b"
+										}
+									]
+								},
 								{
 									"include": "#code"
 								},
 								{
-									"name": "entity.name.function.member.operation.samt",
-									"match": "\\b(\\w+)\\b"
+									"name": "entity.name.type.service.samt",
+									"match": "\\b\\w+\\b"
 								}
 							]
 						},
 						{
 							"include": "#code"
-						},
-						{
-							"name": "entity.name.type.service.samt",
-							"match": "\\b(\\w+)\\b"
 						}
 					]
 				},
@@ -558,7 +595,7 @@
 		"type": {
 			"comment": "types are usually declared after colons",
 			"begin": ":",
-			"end": "(\\b[_A-Za-z]\\w*\\b)|(?=[},\\):]|\\b\\d)",
+			"end": "(\\b\\w+\\b)(?!\\s*\\.)",
 			"endCaptures": {
 				"1": {
 					"name": "entity.name.type.samt"
@@ -567,10 +604,6 @@
 			"patterns": [
 				{
 					"include": "#code"
-				}, 
-				{
-					"name": "entity.name.type.samt",
-					"match": "\\b\\w+\\b"
 				}
 			]
 		},
@@ -641,7 +674,21 @@
 					"include": "#code"
 				}
 			]
-		}
+		},
+		"package": {
+			"begin": "\\b\\w+\\b(?=\\s*\\.)",
+			"beginCaptures": {
+				"0": {
+					"name": "entity.name.namespace.samt"
+				}
+			},
+			"end": "\\.",
+			"patterns": [
+				{
+					"include": "#code"
+				}
+			]
+		} 
 	},
 	"scopeName": "source.samt"
 }

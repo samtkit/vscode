@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.0.4] - Pre-release
+
+### Changed
+
+- Ensure keyword escaping works in all contexts
+
 ## [0.0.3] - Pre-release
 
 ### Changed
@@ -22,4 +28,4 @@
 
 ### Added
 
-- Support *.samt syntax highlighting
+- Support \*.samt syntax highlighting

@@ -1,12 +1,34 @@
 import * as vscode from 'vscode';
-import getJre from './getJre';
+import getJava from './getJava';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
+import getLanguageServer from './getLanguageServer';
+
+let client: LanguageClient | null = null;
 
 async function startLanguageServer(): Promise<void> {
-    await getJre();
+    const java = await getJava();
+    if (java == null) {
+        return;
+    }
+
+    const languageServerJar = getLanguageServer();
+    const serverOptions: ServerOptions = {
+        command: java,
+        args: ['-jar', languageServerJar],
+        transport: TransportKind.stdio
+    };
+
+    const clientOptions: LanguageClientOptions = {
+        documentSelector: [{scheme: 'file', language: 'samt'}]
+    };
+
+    client = new LanguageClient('samtLanguageServer', 'SAMT Language Server', serverOptions, clientOptions);
+
+    await client.start();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
     if (vscode.workspace.isTrusted) {
         await startLanguageServer();
     } else {
@@ -14,5 +36,8 @@ export async function activate(context: vscode.ExtensionContext) {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-export function deactivate() { }
+export async function deactivate(): Promise<void> {
+    if (client?.isRunning()) {
+        await client.stop();
+    }
+}

@@ -53,6 +53,11 @@
             "type": "string",
             "default": "",
             "description": "Path to a java installation for the language server"
+          },
+          "samt.languageServer.path": {
+            "type": "string",
+            "default": "",
+            "description": "Path to the JAR file of the SAMT language server"
           }
         }
       }
@@ -87,6 +92,7 @@
   "license": "MIT",
   "dependencies": {
     "jdk-utils": "^0.4.6",
+    "vscode-languageclient": "^8.1.0",
     "which": "^3.0.0"
   }
 }

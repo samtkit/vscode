@@ -10,10 +10,11 @@ const jdkUtilsOptions: IOptions = { withVersion: true, withTags: true };
 // make some fields required
 type JavaRuntime = IJavaRuntime & {
     version: IJavaVersion;
+    javaExecutable: string;
     isJavaHomeEnv: boolean;
     isJdkHomeEnv: boolean;
     isInPathEnv: boolean;
-    isExeInPathEnv: boolean;
+    isExecutableInPath: boolean;
 };
 
 function convertJre(jre: IJavaRuntime, javaInPath: string | null = null): JavaRuntime {
@@ -21,13 +22,15 @@ function convertJre(jre: IJavaRuntime, javaInPath: string | null = null): JavaRu
     if (version == null) {
         throw new Error('Missing JRE version information');
     }
+    const javaExecutable = path.join(homedir, 'bin', JAVA_FILENAME);
     return {
         ...jre,
         version,
+        javaExecutable,
         isJavaHomeEnv: isJavaHomeEnv ?? false,
         isJdkHomeEnv: isJdkHomeEnv ?? false,
         isInPathEnv: isInPathEnv ?? false,
-        isExeInPathEnv: javaInPath === path.join(homedir, 'bin', JAVA_FILENAME)
+        isExecutableInPath: javaInPath === javaExecutable
     };
 }
 
@@ -67,8 +70,8 @@ function compareSource(jre1: JavaRuntime, jre2: JavaRuntime) {
     if (jre1.isInPathEnv !== jre2.isInPathEnv) {
         return jre1.isInPathEnv ? -1 : 1;
     }
-    if (jre1.isExeInPathEnv !== jre2.isExeInPathEnv) {
-        return jre1.isExeInPathEnv ? -1 : 1;
+    if (jre1.isExecutableInPath !== jre2.isExecutableInPath) {
+        return jre1.isExecutableInPath ? -1 : 1;
     }
     return 0;
 }
@@ -118,13 +121,14 @@ async function findJre(): Promise<JavaRuntime | null> {
     return suitableJres[0];
 }
 
-export default async function getJre(): Promise<JavaRuntime | null> {
+export default async function getJava(): Promise<string | null> {
     let jre = await getConfiguredJre();
     if (jre == null) {
         jre = await findJre();
     }
-    if (jre != null) {
-        await window.showInformationMessage(`Using Java ${jre.version.java_version} installed under ${jre.homedir}`);
+    if (jre == null) {
+        return null;
     }
-    return jre;
+    void window.showInformationMessage(`Using Java ${jre.version.java_version} installed under ${jre.homedir}`);
+    return jre.javaExecutable;
 }

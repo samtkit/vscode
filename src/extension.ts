@@ -12,6 +12,11 @@ async function enableTrustedFunctionality(context: vscode.ExtensionContext) {
       restartLanguageServer
     )
   );
+  vscode.workspace.onDidChangeConfiguration(async (event) => {
+    if (event.affectsConfiguration("samt")) {
+      await restartLanguageServer();
+    }
+  });
   await startLanguageServer();
 }
 

@@ -61,6 +61,13 @@
           }
         }
       }
+    ],
+    "commands": [
+      {
+        "command": "samt.restartSamtServer",
+        "title": "Restart SAMT Server",
+        "category": "SAMT"
+      }
     ]
   },
   "scripts": {

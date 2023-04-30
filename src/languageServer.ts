@@ -1,4 +1,5 @@
 import {
+  Executable,
   LanguageClient,
   LanguageClientOptions,
   ServerOptions,
@@ -6,6 +7,7 @@ import {
 } from "vscode-languageclient/node";
 import getJava from "./getJava";
 import * as vscode from "vscode";
+import getPort from "get-port";
 
 let client: LanguageClient | null = null;
 
@@ -16,6 +18,8 @@ function getJarPath(): string {
       .get<string>("languageServer.path") ?? ""
   );
 }
+
+const JAVA_DEBUG_PORT = 5005;
 
 export async function startLanguageServer(): Promise<void> {
   const languageServerJar = getJarPath();
@@ -28,10 +32,26 @@ export async function startLanguageServer(): Promise<void> {
     return;
   }
 
-  const serverOptions: ServerOptions = {
+  const run = {
     command: java,
     args: ["-jar", languageServerJar],
-    transport: TransportKind.stdio,
+    transport: {
+      kind: TransportKind.socket,
+      port: await getPort({ exclude: [JAVA_DEBUG_PORT] }),
+    },
+  } satisfies Executable;
+
+  const debug = {
+    ...run,
+    args: [
+      `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${JAVA_DEBUG_PORT}`,
+      ...run.args,
+    ],
+  } satisfies Executable;
+
+  const serverOptions: ServerOptions = {
+    run,
+    debug,
   };
 
   const clientOptions: LanguageClientOptions = {

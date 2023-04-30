@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  get-port:
+    specifier: ^6.1.2
+    version: 6.1.2
   jdk-utils:
     specifier: ^0.4.6
     version: 0.4.6
@@ -1219,6 +1222,11 @@ packages:
       has: 1.0.3
       has-symbols: 1.0.3
     dev: true
+
+  /get-port@6.1.2:
+    resolution: {integrity: sha512-BrGGraKm2uPqurfGVj/z97/zv8dPleC6x9JBNRTrDNtCkkRF4rPwrQXFgL7+I+q8QSdU4ntLQX2D7KIxSy8nGw==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dev: false
 
   /github-from-package@0.0.0:
     resolution: {integrity: sha512-SyHy3T1v2NUXn29OsWdxmK6RwHD+vkj3v8en8AOBZ1wBQ/hCAQ5bAQTD02kW4W9tUp/3Qh6J8r9EvntiyCmOOw==}

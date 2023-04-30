@@ -101,6 +101,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "get-port": "^6.1.2",
     "jdk-utils": "^0.4.6",
     "vscode-languageclient": "^8.1.0",
     "which": "^3.0.0"

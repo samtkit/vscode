@@ -41,13 +41,17 @@ export async function startLanguageServer(): Promise<void> {
     },
   } satisfies Executable;
 
-  const debug = {
-    ...run,
-    args: [
-      `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${JAVA_DEBUG_PORT}`,
-      ...run.args,
-    ],
-  } satisfies Executable;
+  // only launch in debug if port is available
+  const debug =
+    (await getPort({ port: JAVA_DEBUG_PORT })) !== JAVA_DEBUG_PORT
+      ? run
+      : {
+          ...run,
+          args: [
+            `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${JAVA_DEBUG_PORT}`,
+            ...run.args,
+          ],
+        };
 
   const serverOptions: ServerOptions = {
     run,

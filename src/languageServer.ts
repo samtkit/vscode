@@ -8,6 +8,7 @@ import {
 import getJava from "./getJava";
 import * as vscode from "vscode";
 import getPort from "get-port";
+import delay from "./delay";
 
 let client: LanguageClient | null = null;
 
@@ -42,16 +43,13 @@ export async function startLanguageServer(): Promise<void> {
   } satisfies Executable;
 
   // only launch in debug if port is available
-  const debug =
-    (await getPort({ port: JAVA_DEBUG_PORT })) !== JAVA_DEBUG_PORT
-      ? run
-      : {
-          ...run,
-          args: [
-            `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${JAVA_DEBUG_PORT}`,
-            ...run.args,
-          ],
-        };
+  const debug = {
+    ...run,
+    args: [
+      `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${JAVA_DEBUG_PORT}`,
+      ...run.args,
+    ],
+  } satisfies Executable;
 
   const serverOptions: ServerOptions = {
     run,
@@ -85,6 +83,11 @@ export async function stopLanguageServer(): Promise<void> {
 }
 
 export async function restartLanguageServer(): Promise<void> {
+  const isDebugging = client?.isInDebugMode ?? false;
   await stopLanguageServer();
+  if (isDebugging) {
+    // hopefully the java debug port is available by now
+    await delay(500);
+  }
   await startLanguageServer();
 }

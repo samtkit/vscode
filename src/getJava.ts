@@ -6,7 +6,7 @@ import {
   getRuntime,
   JAVA_FILENAME,
 } from "jdk-utils";
-import { workspace, window } from "vscode";
+import * as vscode from "vscode";
 import which from "which";
 import { realpath } from "fs/promises";
 import path from "path";
@@ -49,7 +49,7 @@ function meetsMinimumRequirement(jre: JavaRuntime): boolean {
 }
 
 async function getConfiguredJre(): Promise<JavaRuntime | null> {
-  const config = workspace.getConfiguration("samt");
+  const config = vscode.workspace.getConfiguration("samt");
   const javaHome = config.get<string>("java.home");
   if (!javaHome) {
     return null;
@@ -57,17 +57,11 @@ async function getConfiguredJre(): Promise<JavaRuntime | null> {
 
   const jre = await getRuntime(javaHome, jdkUtilsOptions);
   if (jre == null) {
-    await window.showErrorMessage(
-      `Configured Java installation ${javaHome} is not valid`
-    );
     return null;
   }
 
   const convertedJre = convertJre(jre);
   if (!meetsMinimumRequirement(convertedJre)) {
-    await window.showErrorMessage(
-      `Configured Java installation ${javaHome} does not meet minimum version requirement (Java ${minimumVersion})`
-    );
     return null;
   }
 
@@ -111,9 +105,6 @@ function compareVersion(jre1: JavaRuntime, jre2: JavaRuntime) {
 async function findJre(): Promise<JavaRuntime | null> {
   const jres = await findRuntimes(jdkUtilsOptions);
   if (jres.length === 0) {
-    await window.showErrorMessage(
-      "No Java 17 (or newer) installations found. If you have Java installed either set the JAVA_HOME environment variable or configure the samt.java.home settings"
-    );
     return null;
   }
   // @types/which has an incorrect return type for nothrow: true
@@ -126,9 +117,6 @@ async function findJre(): Promise<JavaRuntime | null> {
     .map((jre) => convertJre(jre, resolvedJavaInPath))
     .filter(meetsMinimumRequirement);
   if (suitableJres.length === 0) {
-    await window.showErrorMessage(
-      "No Java installtion found that meets the minimum version requirement (Java 17)"
-    );
     return null;
   }
 
@@ -142,16 +130,29 @@ async function findJre(): Promise<JavaRuntime | null> {
   return suitableJres[0];
 }
 
+const OPEN_SETTINGS = "Open Settings";
+
 export default async function getJava(): Promise<string | null> {
   let jre = await getConfiguredJre();
   if (jre == null) {
     jre = await findJre();
   }
   if (jre == null) {
+    void showMissingJavaError();
     return null;
   }
-  void window.showInformationMessage(
-    `Using Java ${jre.version.java_version} installed under ${jre.homedir}`
-  );
   return jre.javaExecutable;
+}
+
+async function showMissingJavaError(): Promise<void> {
+  const item = await vscode.window.showErrorMessage(
+    `The SAMT language server requires Java ${minimumVersion} or later to be installed. If the automatic detection failed, please configure the path to the Java home directory in the SAMT extension settings.`,
+    OPEN_SETTINGS
+  );
+  if (item === OPEN_SETTINGS) {
+    await vscode.commands.executeCommand(
+      "workbench.action.openSettings",
+      "samt.java.home"
+    );
+  }
 }

@@ -140,7 +140,7 @@ suite("TextMate Grammar Test Suite", () => {
 
     function checkRegex(regexString: string): void {
       const includedKeywords = keywords.filter((keyword) =>
-        regexString.match(`\\b${keyword}\\b`)
+        new RegExp(`\\b${keyword}\\b`).test(regexString)
       );
       if (includedKeywords.length === 0) {
         return;

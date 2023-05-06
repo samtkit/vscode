@@ -9,8 +9,8 @@ import getJava from "./getJava";
 import * as vscode from "vscode";
 import getPort from "get-port";
 import delay from "./delay";
-import { Octokit } from "@octokit/rest";
 import { getApi } from "@microsoft/vscode-file-downloader-api";
+import { getLatestReleaseAsset } from "./github";
 
 let client: LanguageClient | null = null;
 
@@ -27,31 +27,19 @@ const javaDebugPort = 5005;
 const jarName = "samt-ls.jar";
 const releaseIdKey = "languageServerReleaseId";
 
-async function getLatestRelease() {
-  const octokit = new Octokit({ userAgent: "samtkit/vscode" });
-  const response = await octokit.rest.repos.getLatestRelease({
-    owner: "samtkit",
-    repo: "core",
-  });
-  return response.data;
-}
-
 async function downloadLanguageServer(
   context: vscode.ExtensionContext
 ): Promise<string> {
   const fileDownloader = await getApi();
   const currentFile = await fileDownloader.tryGetItem(jarName, context);
   const currentReleaseId = context.globalState.get<number>(releaseIdKey);
-  const release = await getLatestRelease();
+  const releaseAsset = await getLatestReleaseAsset(jarName);
 
-  if (currentFile != null && currentReleaseId === release.id) {
+  if (currentFile != null && currentReleaseId === releaseAsset.releaseId) {
     return currentFile.fsPath;
   }
 
-  const languageSeverAsset = release.assets.find(
-    (asset) => asset.name === jarName
-  );
-  if (languageSeverAsset == null) {
+  if (releaseAsset.downloadUrl === "") {
     return "";
   }
   return vscode.window.withProgress(
@@ -61,11 +49,11 @@ async function downloadLanguageServer(
     },
     async () => {
       const file = await fileDownloader.downloadFile(
-        vscode.Uri.parse(languageSeverAsset.browser_download_url),
+        vscode.Uri.parse(releaseAsset.downloadUrl),
         jarName,
         context
       );
-      await context.globalState.update(releaseIdKey, release.id);
+      await context.globalState.update(releaseIdKey, releaseAsset.releaseId);
       return file.fsPath;
     }
   );

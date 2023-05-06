@@ -102,7 +102,7 @@
   "license": "MIT",
   "dependencies": {
     "@microsoft/vscode-file-downloader-api": "^1.0.1",
-    "@octokit/rest": "^19.0.7",
+    "axios": "^1.4.0",
     "get-port": "^6.1.2",
     "jdk-utils": "^0.4.6",
     "vscode-languageclient": "^8.1.0",

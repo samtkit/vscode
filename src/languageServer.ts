@@ -9,6 +9,8 @@ import getJava from "./getJava";
 import * as vscode from "vscode";
 import getPort from "get-port";
 import delay from "./delay";
+import { Octokit } from "@octokit/rest";
+import { getApi } from "@microsoft/vscode-file-downloader-api";
 
 let client: LanguageClient | null = null;
 
@@ -16,16 +18,68 @@ function getJarPath(): string {
   return (
     vscode.workspace
       .getConfiguration("samt")
-      .get<string>("languageServer.path") ?? ""
+      .get<string>("languageServer.path")
+      ?.trim() ?? ""
   );
 }
 
-const JAVA_DEBUG_PORT = 5005;
+const javaDebugPort = 5005;
+const jarName = "samt-ls.jar";
+const releaseIdKey = "languageServerReleaseId";
 
-export async function startLanguageServer(): Promise<void> {
-  const languageServerJar = getJarPath();
+async function getLatestRelease() {
+  const octokit = new Octokit({ userAgent: "samtkit/vscode" });
+  const response = await octokit.rest.repos.getLatestRelease({
+    owner: "samtkit",
+    repo: "core",
+  });
+  return response.data;
+}
+
+async function downloadLanguageServer(
+  context: vscode.ExtensionContext
+): Promise<string> {
+  const fileDownloader = await getApi();
+  const currentFile = await fileDownloader.tryGetItem(jarName, context);
+  const currentReleaseId = context.globalState.get<number>(releaseIdKey);
+  const release = await getLatestRelease();
+
+  if (currentFile != null && currentReleaseId === release.id) {
+    return currentFile.fsPath;
+  }
+
+  const languageSeverAsset = release.assets.find(
+    (asset) => asset.name === jarName
+  );
+  if (languageSeverAsset == null) {
+    return "";
+  }
+  return vscode.window.withProgress(
+    {
+      title: "Downloading SAMT Language Server",
+      location: vscode.ProgressLocation.Window,
+    },
+    async () => {
+      const file = await fileDownloader.downloadFile(
+        vscode.Uri.parse(languageSeverAsset.browser_download_url),
+        jarName,
+        context
+      );
+      await context.globalState.update(releaseIdKey, release.id);
+      return file.fsPath;
+    }
+  );
+}
+
+export async function startLanguageServer(
+  context: vscode.ExtensionContext
+): Promise<void> {
+  let languageServerJar = getJarPath();
   if (languageServerJar === "") {
-    return;
+    languageServerJar = await downloadLanguageServer(context);
+    if (languageServerJar === "") {
+      return;
+    }
   }
 
   const java = await getJava();
@@ -38,7 +92,7 @@ export async function startLanguageServer(): Promise<void> {
     args: ["-jar", languageServerJar],
     transport: {
       kind: TransportKind.socket,
-      port: await getPort({ exclude: [JAVA_DEBUG_PORT] }),
+      port: await getPort({ exclude: [javaDebugPort] }),
     },
   } satisfies Executable;
 
@@ -46,7 +100,7 @@ export async function startLanguageServer(): Promise<void> {
   const debug = {
     ...run,
     args: [
-      `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${JAVA_DEBUG_PORT}`,
+      `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${javaDebugPort}`,
       ...run.args,
     ],
   } satisfies Executable;
@@ -82,12 +136,14 @@ export async function stopLanguageServer(): Promise<void> {
   client.outputChannel.dispose();
 }
 
-export async function restartLanguageServer(): Promise<void> {
+export async function restartLanguageServer(
+  context: vscode.ExtensionContext
+): Promise<void> {
   const isDebugging = client?.isInDebugMode ?? false;
   await stopLanguageServer();
   if (isDebugging) {
     // hopefully the java debug port is available by now
     await delay(500);
   }
-  await startLanguageServer();
+  await startLanguageServer(context);
 }

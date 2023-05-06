@@ -50,7 +50,7 @@ function meetsMinimumRequirement(jre: JavaRuntime): boolean {
 
 async function getConfiguredJre(): Promise<JavaRuntime | null> {
   const config = vscode.workspace.getConfiguration("samt");
-  const javaHome = config.get<string>("java.home");
+  const javaHome = config.get<string>("java.home")?.trim();
   if (!javaHome) {
     return null;
   }

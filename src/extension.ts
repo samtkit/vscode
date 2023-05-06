@@ -14,10 +14,10 @@ async function enableTrustedFunctionality(context: vscode.ExtensionContext) {
   );
   vscode.workspace.onDidChangeConfiguration(async (event) => {
     if (event.affectsConfiguration("samt")) {
-      await restartLanguageServer();
+      await restartLanguageServer(context);
     }
   });
-  await startLanguageServer();
+  await startLanguageServer(context);
 }
 
 export async function activate(

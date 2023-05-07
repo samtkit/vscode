@@ -9,9 +9,9 @@
   },
   "description": "VS Code support for the Simple API Modeling Toolkit",
   "version": "0.0.4",
-  "packageManager": "pnpm@8.1.0",
+  "packageManager": "pnpm@8.4.0",
   "engines": {
-    "vscode": "^1.77.0"
+    "vscode": "^1.78.0"
   },
   "categories": [
     "Programming Languages",
@@ -44,13 +44,38 @@
         "language": "samt",
         "path": "./snippets.json"
       }
+    ],
+    "configuration": [
+      {
+        "title": "SAMT - Simple API Modeling Toolkit",
+        "properties": {
+          "samt.java.home": {
+            "type": "string",
+            "default": "",
+            "description": "Path to a java installation for the language server"
+          },
+          "samt.languageServer.path": {
+            "type": "string",
+            "default": "",
+            "description": "Path to the JAR file of the SAMT language server"
+          }
+        }
+      }
+    ],
+    "commands": [
+      {
+        "command": "samt.restartSamtServer",
+        "title": "Restart SAMT Server",
+        "category": "SAMT"
+      }
     ]
   },
   "scripts": {
-    "lint": "eslint src --ext ts",
-    "test": "pnpm test-compile && pnpm run lint && node ./out/test/runTest.js",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "prettier --check \"src/**/*.ts\" && eslint src --ext ts",
+    "test": "pnpm run test-compile && pnpm run lint && node ./out/test/runTest.js",
     "vscode:prepublish": "pnpm run esbuild-base --minify",
-    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild-base": "tsc --noEmit -p ./ && esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
     "build": "pnpm run esbuild-base --sourcemap",
     "watch": "pnpm run esbuild-base --sourcemap --watch",
     "test-compile": "tsc -p ./",
@@ -59,17 +84,31 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
-    "@types/node": "~16.18.24",
-    "@types/vscode": "^1.77.0",
-    "@typescript-eslint/eslint-plugin": "^5.59.0",
-    "@typescript-eslint/parser": "^5.59.0",
+    "@types/node": "^16.18.26",
+    "@types/vscode": "^1.78.0",
+    "@types/which": "^3.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
     "@vscode/test-electron": "^2.3.0",
     "@vscode/vsce": "^2.19.0",
-    "esbuild": "^0.17.17",
-    "eslint": "^8.39.0",
-    "glob": "^10.2.1",
+    "esbuild": "^0.17.18",
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "glob": "^10.2.2",
     "mocha": "^10.2.0",
+    "prettier": "^2.8.8",
     "typescript": "^5.0.4"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@microsoft/vscode-file-downloader-api": "^1.0.1",
+    "axios": "^1.4.0",
+    "get-port": "^6.1.2",
+    "jdk-utils": "^0.4.6",
+    "vscode-languageclient": "^8.1.0",
+    "which": "^3.0.1"
+  },
+  "extensionDependencies": [
+    "mindaro-dev.file-downloader"
+  ]
 }

@@ -11,5 +11,6 @@ src/**
 .github
 images
 pnpm-lock.yaml
+.prettierignore
 out/**
 !out/extension.js

@@ -84,7 +84,6 @@ export async function startLanguageServer(
     },
   } satisfies Executable;
 
-  // only launch in debug if port is available
   const debug = {
     ...run,
     args: [

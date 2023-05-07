@@ -102,20 +102,30 @@ function compareVersion(jre1: JavaRuntime, jre2: JavaRuntime) {
   return parts1.length - parts2.length;
 }
 
-async function findJre(): Promise<JavaRuntime | null> {
+async function collectJres(): Promise<JavaRuntime[]> {
   const jres = await findRuntimes(jdkUtilsOptions);
-  if (jres.length === 0) {
-    return null;
-  }
   // @types/which has an incorrect return type for nothrow: true
   const javaInPath = (await which(JAVA_FILENAME, { nothrow: true })) as
     | string
     | null;
-  const resolvedJavaInPath =
-    javaInPath != null ? await realpath(javaInPath) : null;
-  const suitableJres = jres
-    .map((jre) => convertJre(jre, resolvedJavaInPath))
-    .filter(meetsMinimumRequirement);
+  if (javaInPath == null) {
+    return jres.map((jre) => convertJre(jre));
+  }
+
+  const resolvedJavaInPath = await realpath(javaInPath);
+  const javaHome = path.dirname(path.dirname(resolvedJavaInPath));
+  if (!jres.some((jre) => jre.homedir === javaHome)) {
+    const jre = await getRuntime(javaHome, jdkUtilsOptions);
+    if (jre != null) {
+      jres.push(jre);
+    }
+  }
+  return jres.map((jre) => convertJre(jre, resolvedJavaInPath));
+}
+
+async function findJre(): Promise<JavaRuntime | null> {
+  const jres = await collectJres();
+  const suitableJres = jres.filter(meetsMinimumRequirement);
   if (suitableJres.length === 0) {
     return null;
   }

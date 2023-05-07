@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## [0.1.0] - Pre-release
+
+### Added
+
+- Integration with SAMT Language Server enabling IDE features
+
+### Changed
+
+- Made snippets more consistent
+- Detect Java executable in PATH
+
 ## [0.0.4] - Pre-release
 
 ### Changed

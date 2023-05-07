@@ -110,5 +110,6 @@
   },
   "extensionDependencies": [
     "mindaro-dev.file-downloader"
-  ]
+  ],
+  "icon": "./icon.png"
 }

@@ -2,7 +2,7 @@
     "Record Declaration": {
         "prefix": "record",
         "body": [
-            "record ${1:Name} {",
+            "record ${1:RecordName} {",
             "\t${2:fieldName}: ${3:Type}",
             "}"
         ]
@@ -10,7 +10,7 @@
     "Service Declaration": {
         "prefix": "service",
         "body": [
-            "service ${1:Name} {",
+            "service ${1:ServiceName} {",
             "\t${2:operationName}(${3:paramName}: ${4:ParamType}): ${5:ReturnType}",
             "}"
         ]
@@ -18,7 +18,7 @@
     "Enum Declaration": {
         "prefix": "enum",
         "body": [
-            "enum ${1:Name} {",
+            "enum ${1:EnumName} {",
             "\t${2:MEMBER}",
             "}"
         ]
@@ -26,7 +26,7 @@
     "Provider Declaration": {
         "prefix": "provider",
         "body": [
-            "provide ${1:Name} {",
+            "provide ${1:ProviderName} {",
             "\timplements ${2:ServiceName}",
             "",
             "\ttransport ${3:HTTP}",

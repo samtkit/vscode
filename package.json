@@ -9,7 +9,7 @@
   },
   "description": "VS Code support for the Simple API Modeling Toolkit",
   "version": "0.1.0",
-  "packageManager": "pnpm@8.5.0",
+  "packageManager": "pnpm@8.5.1",
   "engines": {
     "vscode": "^1.78.0"
   },

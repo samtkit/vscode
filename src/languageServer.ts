@@ -33,7 +33,7 @@ async function downloadLanguageServer(
   const fileDownloader = await getApi();
   const currentFile = await fileDownloader.tryGetItem(jarName, context);
   const currentReleaseId = context.globalState.get<number>(releaseIdKey);
-  const releaseAsset = await getLatestReleaseAsset(jarName);
+  const releaseAsset = await getLatestReleaseAsset("samtkit", "core", jarName);
 
   if (currentFile != null && currentReleaseId === releaseAsset.releaseId) {
     return currentFile.fsPath;

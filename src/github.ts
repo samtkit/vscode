@@ -21,10 +21,12 @@ const requestConfig: AxiosRequestConfig = {
 };
 
 export async function getLatestReleaseAsset(
+  owner: string,
+  repo: string,
   assetName: string
 ): Promise<Release> {
   const response = await axios.get<GithubRelease>(
-    "https://api.github.com/repos/samtkit/core/releases/latest",
+    `https://api.github.com/repos/${owner}/${repo}/releases/latest`,
     requestConfig
   );
   const release = response.data;

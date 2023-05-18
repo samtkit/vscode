@@ -119,7 +119,7 @@ suite("TextMate Grammar Test Suite", () => {
     const keywords = [
       "import",
       "package",
-      "alias",
+      "typealias",
       "record",
       "enum",
       "service",

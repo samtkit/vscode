@@ -69,12 +69,12 @@
 					"name": "keyword.other.import.samt"
 				}
 			},
-			"end": "(?<!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
+			"end": "(?<!\\^)(?=\\b(import|package|typealias|record|enum|service|provide|consume)\\b)",
 			"patterns": [
 				{
 					"name": "meta.import.as.samt",
 					"begin": "(?<!\\^)(?=\\b(as)\\b)",
-					"end": "(?<!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
+					"end": "(?<!\\^)(?=\\b(import|package|typealias|record|enum|service|provide|consume)\\b)",
 					"patterns": [
 						{
 							"include": "#code"
@@ -102,7 +102,7 @@
 					"name": "keyword.other.package.samt"
 				}
 			},
-			"end": "(?<!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
+			"end": "(?<!\\^)(?=\\b(import|package|typealias|record|enum|service|provide|consume)\\b)",
 			"patterns": [
 				{
 					"include": "#code"
@@ -115,13 +115,13 @@
 		},
 		"type-alias": {
 			"name": "meta.typealias.samt",
-			"begin": "(?<!\\^)\\b(alias)\\b",
+			"begin": "(?<!\\^)\\b(typealias)\\b",
 			"beginCaptures": {
 				"1": {
 					"name": "storage.type.typealias.samt"
 				}
 			},
-			"end": "(?<!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
+			"end": "(?<!\\^)(?=\\b(import|package|typealias|record|enum|service|provide|consume)\\b)",
 			"patterns": [
 				{
 					"include": "#code"
@@ -140,7 +140,7 @@
 					"name": "storage.type.record.samt"
 				}
 			},
-			"end": "(?<!\\^)(?=\\b(import|package|alias|record|enum|service|provide|consume)\\b)",
+			"end": "(?<!\\^)(?=\\b(import|package|typealias|record|enum|service|provide|consume)\\b)",
 			"patterns": [
 				{
 					"begin": "(?<!\\^)(?<=\\brecord\\b)",
@@ -593,8 +593,8 @@
 			"match": "\\b\\d+(\\.\\d+)?[a-zA-Z_]\\w*\\b"
 		},
 		"type": {
-			"comment": "types are usually declared after colons",
-			"begin": ":",
+			"comment": "types are usually declared after colons or equals signs for aliases",
+			"begin": "[:=]",
 			"end": "(\\b\\w+\\b)(?!\\s*\\.)",
 			"endCaptures": {
 				"1": {

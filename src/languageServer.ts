@@ -89,6 +89,7 @@ export async function startLanguageServer(
     args: [
       `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${javaDebugPort}`,
       ...run.args,
+      "--trace",
     ],
   } satisfies Executable;
 

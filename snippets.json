@@ -42,7 +42,7 @@
         ]
     },
     "Type Alias": {
-        "prefix": "alias",
-        "body": "alias ${1:AliasName} : ${2:Type}"
+        "prefix": "typealias",
+        "body": "typealias ${1:AliasName} = ${2:Type}"
     }
 }

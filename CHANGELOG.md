@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.1.1] - Pre-release
+
+### Changed
+
+- Adjustments for changed typealias syntax
+
 ## [0.1.0] - Pre-release
 
 ### Added

@@ -8,7 +8,7 @@
     "url": "https://github.com/samtkit/vscode"
   },
   "description": "VS Code support for the Simple API Modeling Toolkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "packageManager": "pnpm@8.5.1",
   "engines": {
     "vscode": "^1.78.0"

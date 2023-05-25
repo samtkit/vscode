@@ -20,9 +20,17 @@ const releaseIdKey = "languageServerReleaseId";
 export default class LanguageServerController extends vscode.Disposable {
   private client: LanguageClient | null = null;
   private wasDownloaded = false;
+  private readonly samtYamlFileWatcher =
+    vscode.workspace.createFileSystemWatcher("**/samt.yaml");
 
   constructor(private readonly context: vscode.ExtensionContext) {
-    super(() => this.stop());
+    super(() => {
+      this.samtYamlFileWatcher.dispose();
+      void this.stop();
+    });
+    for (const event of ["Create", "Change", "Delete"] as const) {
+      this.samtYamlFileWatcher[`onDid${event}`](() => this.restart());
+    }
   }
 
   async start(): Promise<void> {

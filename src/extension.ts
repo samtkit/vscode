@@ -1,23 +1,20 @@
 import * as vscode from "vscode";
-import {
-  restartLanguageServer,
-  startLanguageServer,
-  stopLanguageServer,
-} from "./languageServer";
+import LanguageServerController from "./languageServerController";
 
 async function enableTrustedFunctionality(context: vscode.ExtensionContext) {
+  const languageServerController = new LanguageServerController(context);
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "samt.restartSamtServer",
-      restartLanguageServer
-    )
+    vscode.commands.registerCommand("samt.restartSamtServer", () =>
+      languageServerController.restart()
+    ),
+    languageServerController
   );
   vscode.workspace.onDidChangeConfiguration(async (event) => {
     if (event.affectsConfiguration("samt")) {
-      await restartLanguageServer(context);
+      await languageServerController.restart();
     }
   });
-  await startLanguageServer(context);
+  await languageServerController.start();
 }
 
 export async function activate(
@@ -32,6 +29,5 @@ export async function activate(
   }
 }
 
-export async function deactivate(): Promise<void> {
-  await stopLanguageServer();
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export async function deactivate(): Promise<void> {}

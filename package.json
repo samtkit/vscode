@@ -70,6 +70,9 @@
       }
     ]
   },
+  "activationEvents": [
+    "workspaceContains:**/samt.yaml"
+  ],
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "prettier --check \"src/**/*.ts\" && eslint src --ext ts",

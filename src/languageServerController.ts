@@ -17,21 +17,11 @@ const javaDebugPort = 5005;
 const jarName = "samt-ls.jar";
 const releaseIdKey = "languageServerReleaseId";
 
-export default class LanguageServerController extends vscode.Disposable {
+export default class LanguageServerController {
   private client: LanguageClient | null = null;
   private wasDownloaded = false;
-  private readonly samtYamlFileWatcher =
-    vscode.workspace.createFileSystemWatcher("**/samt.yaml");
 
-  constructor(private readonly context: vscode.ExtensionContext) {
-    super(() => {
-      this.samtYamlFileWatcher.dispose();
-      void this.stop();
-    });
-    for (const event of ["Create", "Change", "Delete"] as const) {
-      this.samtYamlFileWatcher[`onDid${event}`](() => this.restart());
-    }
-  }
+  constructor(private readonly context: vscode.ExtensionContext) {}
 
   async start(): Promise<void> {
     let languageServerJar = this.getConfiguredJar();
@@ -105,6 +95,10 @@ export default class LanguageServerController extends vscode.Disposable {
       await delay(500);
     }
     await this.start();
+  }
+
+  async dispose(): Promise<void> {
+    await this.stop();
   }
 
   private getConfiguredJar(): string {

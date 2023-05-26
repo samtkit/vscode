@@ -29,7 +29,11 @@
         "extensions": [
           ".samt"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/language-light.png",
+          "dark": "./icons/language-dark.png"
+        }
       }
     ],
     "grammars": [
@@ -114,5 +118,5 @@
   "extensionDependencies": [
     "mindaro-dev.file-downloader"
   ],
-  "icon": "./icon.png"
+  "icon": "./icons/plugin.png"
 }

@@ -1,4 +1,5 @@
 # SAMT
+
 [![Marketplace Rating](https://img.shields.io/visual-studio-marketplace/r/samt.samt)](https://marketplace.visualstudio.com/items?itemName=samt.samt)
 [![Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/samt.samt)](https://marketplace.visualstudio.com/items?itemName=samt.samt)
 [![Marketplace Installations](https://img.shields.io/visual-studio-marketplace/i/samt.samt)](https://marketplace.visualstudio.com/items?itemName=samt.samt)
@@ -19,6 +20,17 @@ At the moment, this extension provides the following features:
 ### Snippets
 
 ![Snippets](images/snippets.gif)
+
+### Language Server
+
+The following features are supported via the SAMT Language Server:
+
+- Error Reporting
+- Go To Definition
+- Find References
+- Semantic Highlighting
+- Documentation on Hover
+- Outline
 
 ## Contributing
 

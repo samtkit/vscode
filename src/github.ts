@@ -17,10 +17,11 @@ interface GithubRelease {
 }
 
 export async function getLatestReleaseAsset(
+  repository: string,
   assetName: string
 ): Promise<Release> {
   const response = await axios.get<GithubRelease>(
-    "https://api.github.com/repos/samtkit/core/releases/latest"
+    `https://api.github.com/repos/${repository}/releases/latest`
   );
   const release = response.data;
   const downloadUrl =

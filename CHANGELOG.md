@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [0.1.2] - Pre-release
+
+### Changed
+
+- Added SAMT file icon
+- Start extension if `samt.yaml` exists in workspace
+- Document features in README
+
 ## [0.1.1] - Pre-release
 
 ### Changed

@@ -8,8 +8,8 @@
     "url": "https://github.com/samtkit/vscode"
   },
   "description": "VS Code support for the Simple API Modeling Toolkit",
-  "version": "0.1.1",
-  "packageManager": "pnpm@8.5.1",
+  "version": "0.1.2",
+  "packageManager": "pnpm@8.6.0",
   "engines": {
     "vscode": "^1.78.0"
   },
@@ -91,11 +91,11 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
-    "@types/node": "^16.18.33",
+    "@types/node": "^16.18.34",
     "@types/vscode": "^1.78.1",
     "@types/which": "^3.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.59.7",
-    "@typescript-eslint/parser": "^5.59.7",
+    "@typescript-eslint/eslint-plugin": "^5.59.8",
+    "@typescript-eslint/parser": "^5.59.8",
     "@vscode/test-electron": "^2.3.2",
     "@vscode/vsce": "^2.19.0",
     "esbuild": "^0.17.19",

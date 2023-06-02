@@ -79,8 +79,8 @@
         "properties": {
           "cwd": {
             "type": "string",
-            "description": "Path to the SAMT wrapper script",
-            "default": "./samtw"
+            "description": "Path to the working directory containing the SAMT wrapper",
+            "default": ""
           },
           "command": {
             "type": "string",

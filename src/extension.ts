@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import LanguageServerController from "./languageServerController";
+import SamtTaskProvider from "./samtTaskProvider";
 
 let languageServerController: LanguageServerController | null = null;
 
@@ -13,7 +14,8 @@ async function enableTrustedFunctionality(context: vscode.ExtensionContext) {
       if (event.affectsConfiguration("samt")) {
         await languageServerController?.restart();
       }
-    })
+    }),
+    vscode.tasks.registerTaskProvider("samt", new SamtTaskProvider())
   );
   await languageServerController.start();
 }

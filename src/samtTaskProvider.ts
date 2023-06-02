@@ -64,8 +64,11 @@ async function getSamtTasks(
     const folder = vscode.workspace.getWorkspaceFolder(wrapper);
     const cwd = path.dirname(wrapper.fsPath);
     const relativeCwd =
-      // we want our relative paths to use forward slashes, thus posix
-      folder != null ? path.posix.relative(folder.uri.fsPath, cwd) : null;
+      folder != null
+        ? path
+            .relative(folder.uri.fsPath, cwd)
+            .replaceAll(path.win32.sep, path.posix.sep)
+        : null;
     const definition: SamtTaskDefinition = {
       type: "samt",
       cwd: relativeCwd ?? cwd,

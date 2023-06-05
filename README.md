@@ -34,6 +34,12 @@ The following features are supported via the SAMT Language Server:
 
 For these features to work you need to setup your SAMT project with a samt.yaml file. We recommend the [SAMT Template](https://github.com/samtkit/template) as a starting point.
 
+### Compilation
+
+This extension provides a default build task if you use the SAMT wrapper in your project:
+
+![Task](images/task.gif)
+
 ## Contributing
 
 Want to report a bug, contribute code, or improve documentation? Excellent!

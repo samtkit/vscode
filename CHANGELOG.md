@@ -2,9 +2,15 @@
 
 ## [Unreleased]
 
+## [0.2.0] - Pre-release
+
+### Added
+
+- Added Task Provider
+
 ## [0.1.2] - Pre-release
 
-### Changed
+### Added
 
 - Added SAMT file icon
 - Start extension if `samt.yaml` exists in workspace

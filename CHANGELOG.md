@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.0.0]
+
+### Changed
+
+- Move out of preview 🚀
+
 ## [0.2.0] - Pre-release
 
 ### Added

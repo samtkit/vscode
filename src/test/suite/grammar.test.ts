@@ -10,7 +10,7 @@ import path from "path";
 async function readGrammar(): Promise<TextmateGrammar> {
   const grammarPath = path.resolve(
     __dirname,
-    "../../../syntaxes/samt.tmLanguage.json"
+    "../../../syntaxes/samt.tmLanguage.json",
   );
   const grammarJson = await readFile(grammarPath, "utf8");
   return Convert.toTextmateGrammar(grammarJson);
@@ -46,7 +46,7 @@ suite("TextMate Grammar Test Suite", () => {
       }
       assert(
         pattern.patterns?.some((p) => p.include === "#code"),
-        `code was not included in pattern ${JSON.stringify(pattern)}`
+        `code was not included in pattern ${JSON.stringify(pattern)}`,
       );
       pattern.patterns?.forEach(checkPatternRecursive);
     }
@@ -72,7 +72,7 @@ suite("TextMate Grammar Test Suite", () => {
     }: Pattern) {
       assert(
         name == null || name.endsWith(".samt"),
-        `scope name "${name ?? ""}" does not end with .samt`
+        `scope name "${name ?? ""}" does not end with .samt`,
       );
       patterns?.forEach(checkPatternRecursive);
       for (const c of [captures, beginCaptures, endCaptures, whileCaptures]) {
@@ -140,7 +140,7 @@ suite("TextMate Grammar Test Suite", () => {
 
     function checkRegex(regexString: string): void {
       const includedKeywords = keywords.filter((keyword) =>
-        new RegExp(`\\b${keyword}\\b`).test(regexString)
+        new RegExp(`\\b${keyword}\\b`).test(regexString),
       );
       if (includedKeywords.length === 0) {
         return;

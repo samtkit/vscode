@@ -70,7 +70,7 @@ export default class LanguageServerController {
       "samtLanguageServer",
       "SAMT Language Server",
       serverOptions,
-      clientOptions
+      clientOptions,
     );
 
     await this.client.start();
@@ -123,7 +123,7 @@ export default class LanguageServerController {
     try {
       const releaseAsset = await getLatestReleaseAsset(
         githubRepository,
-        jarName
+        jarName,
       );
 
       if (currentFile != null && currentReleaseId === releaseAsset.releaseId) {
@@ -142,15 +142,15 @@ export default class LanguageServerController {
           const file = await fileDownloader.downloadFile(
             vscode.Uri.parse(releaseAsset.downloadUrl),
             jarName,
-            this.context
+            this.context,
           );
           await this.context.globalState.update(
             releaseIdKey,
-            releaseAsset.releaseId
+            releaseAsset.releaseId,
           );
           this.wasDownloaded = true;
           return file.fsPath;
-        }
+        },
       );
     } catch (e) {
       console.error(e);

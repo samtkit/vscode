@@ -13,7 +13,7 @@ export default class SamtTaskProvider implements vscode.TaskProvider {
     this.fileWatcher = vscode.workspace.createFileSystemWatcher(
       `**/${scriptName}}`,
       false,
-      true // ignore change events
+      true, // ignore change events
     );
     const fileListener = () => {
       this.tasksPromise = null;
@@ -37,7 +37,7 @@ export default class SamtTaskProvider implements vscode.TaskProvider {
       task.scope ?? vscode.TaskScope.Workspace,
       task.name,
       task.source,
-      getShellExecution(definition)
+      getShellExecution(definition),
     );
   }
 
@@ -57,7 +57,7 @@ interface SamtTaskDefinition extends vscode.TaskDefinition {
 }
 
 async function getSamtTasks(
-  token: vscode.CancellationToken
+  token: vscode.CancellationToken,
 ): Promise<vscode.Task[]> {
   const wrappers = await findSamtWrappersWithConfig(token);
   return wrappers.map((wrapper) => {
@@ -80,7 +80,7 @@ async function getSamtTasks(
       folder ?? vscode.TaskScope.Workspace,
       "compile",
       "samt",
-      getShellExecution(definition)
+      getShellExecution(definition),
     );
     task.group = vscode.TaskGroup.Build;
     return task;
@@ -88,13 +88,13 @@ async function getSamtTasks(
 }
 
 async function findSamtWrappersWithConfig(
-  token: vscode.CancellationToken
+  token: vscode.CancellationToken,
 ): Promise<vscode.Uri[]> {
   const wrappers = await vscode.workspace.findFiles(
     `**/${scriptName}`,
     undefined,
     undefined,
-    token
+    token,
   );
   const wrappersWithConfig: vscode.Uri[] = [];
   for (const wrapper of wrappers) {
@@ -111,13 +111,13 @@ async function hasConfig(wrapperPath: string) {
 }
 
 function getShellExecution(
-  definition: SamtTaskDefinition
+  definition: SamtTaskDefinition,
 ): vscode.ShellExecution {
   return new vscode.ShellExecution(
     `./${scriptName}`,
     [definition.command, ...definition.args],
     {
       cwd: definition.cwd,
-    }
+    },
   );
 }

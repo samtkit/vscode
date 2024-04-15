@@ -26,7 +26,7 @@ type JavaRuntime = IJavaRuntime & {
 
 function convertJre(
   jre: IJavaRuntime,
-  javaInPath: string | null = null
+  javaInPath: string | null = null,
 ): JavaRuntime {
   const { homedir, version, isJavaHomeEnv, isJdkHomeEnv, isInPathEnv } = jre;
   if (version == null) {
@@ -157,12 +157,12 @@ export default async function getJava(): Promise<string | null> {
 async function showMissingJavaError(): Promise<void> {
   const item = await vscode.window.showErrorMessage(
     `The SAMT language server requires Java ${minimumVersion} or later to be installed. If the automatic detection failed, please configure the path to the Java home directory in the SAMT extension settings.`,
-    OPEN_SETTINGS
+    OPEN_SETTINGS,
   );
   if (item === OPEN_SETTINGS) {
     await vscode.commands.executeCommand(
       "workbench.action.openSettings",
-      "samt.java.home"
+      "samt.java.home",
     );
   }
 }
